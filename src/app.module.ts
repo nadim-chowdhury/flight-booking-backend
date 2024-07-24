@@ -6,6 +6,13 @@ import { UserModule } from './user/user.module';
 import { User } from './user/user.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { NotificationModule } from './notification/notification.module';
+import { ReviewModule } from './review/review.module';
+import { RatingModule } from './rating/rating.module';
+import { PaymentModule } from './payment/payment.module';
+import { AdminModule } from './admin/admin.module';
+import { BookingModule } from './booking/booking.module';
+import { FlightModule } from './flight/flight.module';
 
 @Module({
   imports: [
@@ -24,12 +31,15 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
+    AdminModule,
     AuthModule,
-    UserModule,
-    PaymentModule,
+    BookingModule,
+    FlightModule,
     NotificationModule,
-    ReviewModule,
+    PaymentModule,
     RatingModule,
+    ReviewModule,
+    UserModule,
   ],
 })
 export class AppModule {}
@@ -46,9 +56,6 @@ export class AppModule {}
 // import { Flight } from './flight/flight.entity';
 // import { Booking } from './booking/booking.entity';
 // import { Payment } from './payment/payment.entity';
-import { NotificationModule } from './notification/notification.module';
-import { ReviewModule } from './review/review.module';
-import { RatingModule } from './rating/rating.module';
 
 // @Module({
 //   imports: [

@@ -8,7 +8,7 @@ import {
   Param,
   UseGuards,
 } from '@nestjs/common';
-import { DashboardService } from './dashboard.service';
+import { AdminService } from './admin.service';
 import { FlightService } from '../flight/flight.service';
 import { UserService } from '../user/user.service';
 import { CreateFlightDto } from '../flight/dto/create-flight.dto';
@@ -22,7 +22,7 @@ import { Roles } from '../auth/roles.decorator';
 @Roles('admin')
 export class AdminController {
   constructor(
-    private dashboardService: DashboardService,
+    private dashboardService: AdminService,
     private flightService: FlightService,
     private userService: UserService,
   ) {}
