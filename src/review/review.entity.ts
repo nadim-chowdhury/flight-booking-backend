@@ -6,8 +6,8 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { User } from '../user/user.entity';
-import { Flight } from '../flight/flight.entity';
+import { User } from '../entities/user.entity';
+import { Flight } from '../entities/flight.entity';
 
 @Entity()
 export class Review {

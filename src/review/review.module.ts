@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReviewService } from './review.service';
 import { ReviewController } from './review.controller';
 import { Review } from './review.entity';
-import { User } from '../user/user.entity';
-import { Flight } from '../flight/flight.entity';
+import { User } from '../entities/user.entity';
+import { Flight } from '../entities/flight.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Review, User, Flight])],

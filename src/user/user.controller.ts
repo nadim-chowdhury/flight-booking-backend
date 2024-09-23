@@ -18,40 +18,42 @@ import { extname } from 'path';
 @Controller('user')
 @UseGuards(JwtAuthGuard)
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
+  // Get profile by user ID
   @Get(':id')
-  getProfile(@Param('id') id: string) {
-    return this.userService.getProfile(+id);
+  async getProfile(@Param('id') id: number) {
+    return this.userService.getProfile(id);
   }
 
+  // Update user profile
   @Patch(':id')
-  updateProfile(
-    @Param('id') id: string,
+  async updateProfile(
+    @Param('id') id: number,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    return this.userService.updateProfile(+id, updateProfileDto);
+    return this.userService.updateProfile(id, updateProfileDto);
   }
 
+  // Upload or update profile picture
   @Patch(':id/profile-picture')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads/profile-pictures',
         filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
           const ext = extname(file.originalname);
-          cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+          cb(null, `profile-${uniqueSuffix}${ext}`);
         },
       }),
     }),
   )
-  uploadProfilePicture(
-    @Param('id') id: string,
+  async uploadProfilePicture(
+    @Param('id') id: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const profilePicture = `/uploads/profile-pictures/${file.filename}`;
-    return this.userService.updateProfilePicture(+id, profilePicture);
+    const profilePicturePath = `/uploads/profile-pictures/${file.filename}`;
+    return this.userService.updateProfilePicture(id, profilePicturePath);
   }
 }

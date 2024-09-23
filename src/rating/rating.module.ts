@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RatingService } from './rating.service';
 import { RatingController } from './rating.controller';
 import { Rating } from './rating.entity';
-import { User } from '../user/user.entity';
-import { Flight } from '../flight/flight.entity';
+import { User } from '../entities/user.entity';
+import { Flight } from '../entities/flight.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Rating, User, Flight])],

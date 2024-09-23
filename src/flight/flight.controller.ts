@@ -1,6 +1,16 @@
-import { Controller, Get, Query, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  Query,
+} from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { SearchFlightDto } from './dto/search-flight.dto';
+import { Flight } from 'src/entities/flight.entity';
 
 @Controller('flights')
 export class FlightController {
@@ -15,94 +25,19 @@ export class FlightController {
   getFlightById(@Param('id') id: number) {
     return this.flightService.getFlightById(id);
   }
+
+  @Post()
+  createFlight(@Body() flight: Flight) {
+    return this.flightService.createFlight(flight);
+  }
+
+  @Put(':id')
+  updateFlight(@Param('id') id: number, @Body() flight: Partial<Flight>) {
+    return this.flightService.updateFlight(id, flight);
+  }
+
+  @Delete(':id')
+  deleteFlight(@Param('id') id: number) {
+    return this.flightService.deleteFlight(id);
+  }
 }
-
-// import {
-//   Controller,
-//   Get,
-//   Post,
-//   Put,
-//   Delete,
-//   Body,
-//   Param,
-// } from '@nestjs/common';
-// import { FlightService } from './flight.service';
-// import { Flight } from './flight.entity';
-
-// @Controller('flights')
-// export class FlightController {
-//   constructor(private readonly flightService: FlightService) {}
-
-//   @Get()
-//   findAll(): Promise<Flight[]> {
-//     return this.flightService.findAll();
-//   }
-
-//   @Get(':id')
-//   findOne(@Param('id') id: number): Promise<Flight> {
-//     return this.flightService.findOne(id);
-//   }
-
-//   @Post()
-//   create(@Body() flight: Flight): Promise<Flight> {
-//     return this.flightService.create(flight);
-//   }
-
-//   @Put(':id')
-//   update(@Param('id') id: number, @Body() flight: Flight): Promise<any> {
-//     return this.flightService.update(id, flight);
-//   }
-
-//   @Delete(':id')
-//   delete(@Param('id') id: number): Promise<any> {
-//     return this.flightService.delete(id);
-//   }
-// }
-
-//  import {
-//    Controller,
-//    Get,
-//    Post,
-//    Put,
-//    Delete,
-//    Body,
-//    Param,
-//    UseGuards,
-//  } from '@nestjs/common';
-//  import { FlightService } from './flight.service';
-//  import { Flight } from './flight.entity';
-//  import { Roles } from '../auth/roles.decorator';
-//  import { RolesGuard } from '../auth/roles.guard';
-//  import { AuthGuard } from '@nestjs/passport';
-
-//  @Controller('admin/flights')
-//  @UseGuards(AuthGuard('jwt'), RolesGuard)
-//  @Roles('admin')
-//  export class AdminFlightController {
-//    constructor(private readonly flightService: FlightService) {}
-
-//    @Get()
-//    findAll(): Promise<Flight[]> {
-//      return this.flightService.findAll();
-//    }
-
-//    @Get(':id')
-//    findOne(@Param('id') id: number): Promise<Flight> {
-//      return this.flightService.findOne(id);
-//    }
-
-//    @Post()
-//    create(@Body() flight: Flight): Promise<Flight> {
-//      return this.flightService.create(flight);
-//    }
-
-//    @Put(':id')
-//    update(@Param('id') id: number, @Body() flight: Flight): Promise<any> {
-//      return this.flightService.update(id, flight);
-//    }
-
-//    @Delete(':id')
-//    delete(@Param('id') id: number): Promise<any> {
-//      return this.flightService.delete(id);
-//    }
-//  }

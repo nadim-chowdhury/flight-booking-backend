@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentService } from './payment.service';
 import { PaymentController } from './payment.controller';
 import { Payment } from './payment.entity';
-import { User } from '../user/user.entity';
+import { User } from '../entities/user.entity';
 import { Booking } from '../booking/booking.entity';
 import { ConfigModule } from '@nestjs/config';
 
