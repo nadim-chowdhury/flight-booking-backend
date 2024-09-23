@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Booking } from '../booking/booking.entity';
+import { Booking } from '../entities/booking.entity';
 import { User } from '../entities/user.entity';
 import { Flight } from '../entities/flight.entity';
-import { Payment } from '../payment/payment.entity';
+import { Payment } from '../entities/payment.entity';
 
 @Injectable()
 export class AdminService {

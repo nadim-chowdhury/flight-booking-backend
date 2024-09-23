@@ -19,7 +19,7 @@ import { FlightModule } from './flight/flight.module';
 import { User } from './entities/user.entity';
 import { Flight } from './entities/flight.entity';
 import { Booking } from './entities/booking.entity';
-import { Payment } from './payment/payment.entity';
+import { Payment } from './entities/payment.entity';
 
 @Module({
   imports: [

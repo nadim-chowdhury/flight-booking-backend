@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Review } from './review.entity';
+import { Review } from '../entities/review.entity';
 import { User } from '../entities/user.entity';
 import { Flight } from '../entities/flight.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
