@@ -23,15 +23,12 @@ import {
 
 @ApiTags('Routes')
 @Controller('routes')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
 export class RoutesController {
   constructor(private readonly routesService: RoutesService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all routes with optional filters' })
   @ApiResponse({ status: 200, description: 'Returns list of routes.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
   findAll(@Query() query: any): Promise<Route[]> {
     return this.routesService.findAll(query);
   }
@@ -48,7 +45,9 @@ export class RoutesController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new route (Admin only)' })
   @ApiResponse({ status: 201, description: 'Route created successfully.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -57,7 +56,9 @@ export class RoutesController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an existing route (Admin only)' })
   @ApiResponse({ status: 200, description: 'Route updated successfully.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -66,7 +67,9 @@ export class RoutesController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a route (Admin only)' })
   @ApiResponse({ status: 200, description: 'Route deleted successfully.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })

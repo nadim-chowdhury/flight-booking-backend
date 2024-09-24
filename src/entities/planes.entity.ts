@@ -14,7 +14,7 @@ export class Plane {
   @ApiProperty({ example: 'Boeing 747', description: 'The name of the plane' })
   name: string;
 
-  @Column({ length: 10 })
+  @Column({ length: 10, nullable: true })
   @ApiProperty({ example: 'B747', description: 'The code of the plane' })
   code: string;
 

@@ -31,11 +31,11 @@ export class Airport {
   })
   country: string;
 
-  @Column({ length: 3 })
+  @Column({ length: 3, nullable: true })
   @ApiProperty({ example: 'ATL', description: 'IATA code of the airport' })
   iata: string;
 
-  @Column({ length: 4 })
+  @Column({ length: 4, nullable: true })
   @ApiProperty({ example: 'KATL', description: 'ICAO code of the airport' })
   icao: string;
 
@@ -54,11 +54,11 @@ export class Airport {
   })
   altitude: number;
 
-  @Column('int')
+  @Column('int', { nullable: true })
   @ApiProperty({ example: -5, description: 'Timezone offset from UTC' })
   timezone: number;
 
-  @Column({ type: 'char', length: 1 })
+  @Column({ type: 'char', length: 1, nullable: true })
   @ApiProperty({
     example: 'E',
     description:
@@ -66,7 +66,7 @@ export class Airport {
   })
   dst: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   @ApiProperty({ example: 'America/New_York', description: 'Timezone name' })
   tz: string;
 

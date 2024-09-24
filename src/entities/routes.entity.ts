@@ -14,7 +14,7 @@ export class Route {
   @ApiProperty({ example: 'QR', description: 'Airline code (IATA or ICAO)' })
   airline_code: string;
 
-  @Column('int')
+  @Column('int', { nullable: true })
   @ApiProperty({
     example: 157,
     description: 'Airline ID associated with the route',
@@ -25,7 +25,7 @@ export class Route {
   @ApiProperty({ example: 'ATL', description: 'Source airport code (IATA)' })
   source_airport: string;
 
-  @Column('int')
+  @Column('int', { nullable: true })
   @ApiProperty({ example: 347, description: 'Source airport ID' })
   source_airport_id: number;
 
@@ -36,7 +36,7 @@ export class Route {
   })
   destination_airport: string;
 
-  @Column('int')
+  @Column('int', { nullable: true })
   @ApiProperty({ example: 348, description: 'Destination airport ID' })
   destination_airport_id: number;
 
@@ -52,7 +52,7 @@ export class Route {
   @ApiProperty({ example: 0, description: 'Number of stops in the route' })
   stops: number;
 
-  @Column({ length: 10 })
+  @Column({ length: 10, nullable: true })
   @ApiProperty({ example: '747', description: 'Equipment used for the route' })
   equipment: string;
 }

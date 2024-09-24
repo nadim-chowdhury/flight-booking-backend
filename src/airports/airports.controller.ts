@@ -23,9 +23,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 
-@ApiTags('Airports') // Group the routes under 'Airports' in Swagger UI
-@ApiBearerAuth() // Adds JWT bearer token authentication support in Swagger UI
-@UseGuards(JwtAuthGuard, RolesGuard) // Apply JWT auth and roles guard
+@ApiTags('Airports') // Grouping routes under 'Airports' in Swagger UI
 @Controller('airports')
 export class AirportsController {
   constructor(private readonly airportsService: AirportsService) {}
@@ -80,9 +78,11 @@ export class AirportsController {
     return this.airportsService.findOne(id);
   }
 
-  // Admin only: Create a new airport
+  // Protected: Create a new airport (Admin only)
   @Post()
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards only on protected routes
+  @Roles('admin') // Only 'admin' role can access this route
+  @ApiBearerAuth() // JWT Bearer token is required
   @ApiOperation({ summary: 'Create a new airport (Admin only)' })
   @ApiResponse({
     status: 201,
@@ -94,9 +94,11 @@ export class AirportsController {
     return this.airportsService.create(airport);
   }
 
-  // Admin only: Update an airport
+  // Protected: Update an airport by ID (Admin only)
   @Put(':id')
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards
+  @Roles('admin') // Only 'admin' role can access this route
+  @ApiBearerAuth() // JWT Bearer token is required
   @ApiOperation({ summary: 'Update an airport by ID (Admin only)' })
   @ApiParam({
     name: 'id',
@@ -109,9 +111,11 @@ export class AirportsController {
     return this.airportsService.update(id, airport);
   }
 
-  // Admin only: Delete an airport
+  // Protected: Delete an airport by ID (Admin only)
   @Delete(':id')
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards
+  @Roles('admin') // Only 'admin' role can access this route
+  @ApiBearerAuth() // JWT Bearer token is required
   @ApiOperation({ summary: 'Delete an airport by ID (Admin only)' })
   @ApiParam({
     name: 'id',

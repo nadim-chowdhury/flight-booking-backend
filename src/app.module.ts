@@ -4,12 +4,17 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
-// Importing entities
 import { User } from './entities/user.entity';
 import { Flight } from './entities/flight.entity';
 import { Booking } from './entities/booking.entity';
 import { Payment } from './entities/payment.entity';
-import { Passenger } from './entities/passenger.entity'; // Import Passenger entity
+import { Passenger } from './entities/passenger.entity';
+import { Airline } from './entities/airlines.entity';
+import { Airport } from './entities/airports.entity';
+import { Plane } from './entities/planes.entity';
+import { Route } from './entities/routes.entity';
+import { Country } from './entities/countries.entity';
+
 import { AirlinesModule } from './airlines/airlines.module';
 import { AirportsModule } from './airports/airports.module';
 import { CountriesModule } from './countries/countries.module';
@@ -29,11 +34,21 @@ import { RoutesModule } from './routes/routes.module';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Flight, Booking, Payment, Passenger], // Add Passenger entity here
+      entities: [
+        User,
+        Flight,
+        Booking,
+        Payment,
+        Passenger,
+        Airline,
+        Airport,
+        Plane,
+        Route,
+        Country,
+      ],
       synchronize: true,
 
-      // Enable SSL mode and provide additional connection options
-      ssl: process.env.DATABASE_SSL === 'true', // Enable SSL if DATABASE_SSL is 'true'
+      ssl: process.env.DATABASE_SSL === 'true',
       extra: {
         ssl:
           process.env.DATABASE_SSL === 'true'

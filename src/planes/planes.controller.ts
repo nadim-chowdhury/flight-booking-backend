@@ -23,21 +23,16 @@ import {
 
 @ApiTags('Planes')
 @Controller('planes')
-@UseGuards(JwtAuthGuard, RolesGuard) // Apply JWT auth and roles guard
-@ApiBearerAuth()
 export class PlanesController {
   constructor(private readonly planesService: PlanesService) {}
 
-  // Public: Get all planes with optional filters
   @Get()
   @ApiOperation({ summary: 'Get all planes with optional filters' })
   @ApiResponse({ status: 200, description: 'Return list of planes.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
   findAll(@Query() query: any): Promise<Plane[]> {
     return this.planesService.findAll(query);
   }
 
-  // Public: Get plane by ID
   @Get(':id')
   @ApiOperation({ summary: 'Get a plane by ID' })
   @ApiResponse({ status: 200, description: 'Return plane details.' })
@@ -46,9 +41,10 @@ export class PlanesController {
     return this.planesService.findOne(id);
   }
 
-  // Admin only: Create a new plane
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new plane (Admin only)' })
   @ApiResponse({ status: 201, description: 'The plane has been created.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -56,9 +52,10 @@ export class PlanesController {
     return this.planesService.create(plane);
   }
 
-  // Admin only: Update a plane
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a plane (Admin only)' })
   @ApiResponse({ status: 200, description: 'The plane has been updated.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -66,9 +63,10 @@ export class PlanesController {
     return this.planesService.update(id, plane);
   }
 
-  // Admin only: Delete a plane
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a plane (Admin only)' })
   @ApiResponse({ status: 200, description: 'The plane has been deleted.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })

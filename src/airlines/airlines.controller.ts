@@ -23,9 +23,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 
-@ApiTags('Airlines') // Groups the routes under 'Airlines' in Swagger UI
-@ApiBearerAuth() // Adds JWT bearer token authentication support in Swagger UI
-@UseGuards(JwtAuthGuard, RolesGuard) // Apply JWT auth and roles guard
+@ApiTags('Airlines') // Grouping routes under 'Airlines' in Swagger UI
 @Controller('airlines')
 export class AirlinesController {
   constructor(private readonly airlinesService: AirlinesService) {}
@@ -80,9 +78,11 @@ export class AirlinesController {
     return this.airlinesService.findOne(id);
   }
 
-  // Admin only: Create a new airline
+  // Protected: Create a new airline (Admin only)
   @Post()
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards only on protected routes
+  @Roles('admin') // Only 'admin' role can access this route
+  @ApiBearerAuth() // JWT Bearer token is required
   @ApiOperation({ summary: 'Create a new airline (Admin only)' })
   @ApiResponse({
     status: 201,
@@ -94,9 +94,11 @@ export class AirlinesController {
     return this.airlinesService.create(airline);
   }
 
-  // Admin only: Update an airline
+  // Protected: Update an airline (Admin only)
   @Put(':id')
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards
+  @Roles('admin') // Only 'admin' role can access this route
+  @ApiBearerAuth() // JWT Bearer token is required
   @ApiOperation({ summary: 'Update an airline by ID (Admin only)' })
   @ApiParam({
     name: 'id',
@@ -109,9 +111,11 @@ export class AirlinesController {
     return this.airlinesService.update(id, airline);
   }
 
-  // Admin only: Delete an airline
+  // Protected: Delete an airline (Admin only)
   @Delete(':id')
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards
+  @Roles('admin') // Only 'admin' role can access this route
+  @ApiBearerAuth() // JWT Bearer token is required
   @ApiOperation({ summary: 'Delete an airline by ID (Admin only)' })
   @ApiParam({
     name: 'id',

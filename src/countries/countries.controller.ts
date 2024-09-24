@@ -23,15 +23,12 @@ import {
 
 @ApiTags('Countries')
 @Controller('countries')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
 export class CountriesController {
   constructor(private readonly countriesService: CountriesService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all countries with optional filters' })
   @ApiResponse({ status: 200, description: 'Returns list of countries.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
   findAll(@Query() query: any): Promise<Country[]> {
     return this.countriesService.findAll(query);
   }
@@ -48,7 +45,9 @@ export class CountriesController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new country (Admin only)' })
   @ApiResponse({ status: 201, description: 'Country created successfully.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -57,7 +56,9 @@ export class CountriesController {
   }
 
   @Put(':code')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an existing country (Admin only)' })
   @ApiResponse({ status: 200, description: 'Country updated successfully.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
@@ -66,7 +67,9 @@ export class CountriesController {
   }
 
   @Delete(':code')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a country (Admin only)' })
   @ApiResponse({ status: 200, description: 'Country deleted successfully.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
