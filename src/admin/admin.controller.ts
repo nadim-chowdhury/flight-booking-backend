@@ -22,14 +22,14 @@ import { Roles } from '../auth/roles.decorator';
 @Roles('admin')
 export class AdminController {
   constructor(
-    private dashboardService: AdminService,
-    private flightService: FlightService,
-    private userService: UserService,
+    private readonly adminService: AdminService,
+    private readonly flightService: FlightService,
+    private readonly userService: UserService,
   ) {}
 
   @Get('dashboard')
   async getDashboard() {
-    return this.dashboardService.getOverview();
+    return this.adminService.getOverview();
   }
 
   @Get('flights')

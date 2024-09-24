@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { SearchFlightDto } from './dto/search-flight.dto';
-import { Flight } from 'src/entities/flight.entity';
+import { CreateFlightDto } from './dto/create-flight.dto'; // Import CreateFlightDto
+import { UpdateFlightDto } from './dto/update-flight.dto'; // Import UpdateFlightDto
 
 @Controller('flights')
 export class FlightController {
@@ -27,13 +28,17 @@ export class FlightController {
   }
 
   @Post()
-  createFlight(@Body() flight: Flight) {
-    return this.flightService.createFlight(flight);
+  createFlight(@Body() createFlightDto: CreateFlightDto) {
+    // Use CreateFlightDto as the input type for creating a flight
+    return this.flightService.createFlight(createFlightDto);
   }
 
   @Put(':id')
-  updateFlight(@Param('id') id: number, @Body() flight: Partial<Flight>) {
-    return this.flightService.updateFlight(id, flight);
+  updateFlight(
+    @Param('id') id: number,
+    @Body() updateFlightDto: UpdateFlightDto, // Use UpdateFlightDto for updates
+  ) {
+    return this.flightService.updateFlight(id, updateFlightDto);
   }
 
   @Delete(':id')

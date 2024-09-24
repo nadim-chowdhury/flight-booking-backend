@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from '../entities/payment.entity';
 import { User } from '../entities/user.entity';
-import { Booking } from '../booking/booking.entity';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
+import { Booking } from 'src/entities/booking.entity';
 
 @Injectable()
 export class PaymentService {
@@ -23,7 +23,7 @@ export class PaymentService {
     this.stripe = new Stripe(
       this.configService.get<string>('STRIPE_SECRET_KEY'),
       {
-        apiVersion: '2020-08-27',
+        apiVersion: '2024-06-20',
       },
     );
   }
@@ -33,12 +33,18 @@ export class PaymentService {
     bookingId: number,
     token: string,
   ): Promise<Payment> {
-    const user = await this.userRepository.findOne(userId);
+    // Fetch the user with the given ID
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
     if (!user) {
       throw new BadRequestException(`User with ID ${userId} not found`);
     }
 
-    const booking = await this.bookingRepository.findOne(bookingId);
+    // Fetch the booking with the given ID
+    const booking = await this.bookingRepository.findOne({
+      where: { id: bookingId },
+    });
     if (!booking) {
       throw new BadRequestException(`Booking with ID ${bookingId} not found`);
     }
@@ -46,6 +52,7 @@ export class PaymentService {
     const amount = 1000; // Amount in cents
     const currency = 'usd';
 
+    // Create a charge with Stripe
     const charge = await this.stripe.charges.create({
       amount,
       currency,
@@ -54,6 +61,7 @@ export class PaymentService {
       receipt_email: user.email,
     });
 
+    // Create a new Payment entity
     const payment = this.paymentRepository.create({
       stripePaymentId: charge.id,
       amount,
@@ -64,6 +72,7 @@ export class PaymentService {
       createdAt: new Date(),
     });
 
+    // Save the payment in the database
     return this.paymentRepository.save(payment);
   }
 

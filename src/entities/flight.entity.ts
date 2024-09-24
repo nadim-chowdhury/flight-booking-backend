@@ -16,6 +16,9 @@ export class Flight {
   to: string;
 
   @Column()
+  availableSeats: number;
+
+  @Column()
   departureTime: Date;
 
   @Column()

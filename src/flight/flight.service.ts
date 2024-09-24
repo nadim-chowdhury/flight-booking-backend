@@ -1,16 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SearchFlightDto } from './dto/search-flight.dto';
 import { Flight } from 'src/entities/flight.entity';
+import { SearchFlightDto } from './dto/search-flight.dto';
+import { CreateFlightDto } from './dto/create-flight.dto';
+import { UpdateFlightDto } from './dto/update-flight.dto';
 
 @Injectable()
 export class FlightService {
   constructor(
     @InjectRepository(Flight)
-    private flightRepository: Repository<Flight>,
+    private readonly flightRepository: Repository<Flight>,
   ) {}
 
+  // Get all flights
+  async getFlights(): Promise<Flight[]> {
+    return this.flightRepository.find();
+  }
+
+  // Search flights based on parameters
   async searchFlights(searchFlightDto: SearchFlightDto): Promise<Flight[]> {
     const { from, to, departureDate, returnDate } = searchFlightDto;
     const query = this.flightRepository
@@ -28,23 +36,42 @@ export class FlightService {
     return query.getMany();
   }
 
-  async getFlightById(id: any): Promise<Flight> {
-    const flight = await this.flightRepository.findOne(id);
+  // Get flight by ID
+  async getFlightById(id: number): Promise<Flight> {
+    const flight = await this.flightRepository.findOne({ where: { id } });
     if (!flight) {
       throw new NotFoundException(`Flight with ID ${id} not found`);
     }
     return flight;
   }
 
-  async createFlight(flight: Flight): Promise<Flight> {
+  // Create a new flight using CreateFlightDto
+  async createFlight(createFlightDto: CreateFlightDto): Promise<Flight> {
+    // Use the DTO to create a new Flight entity
+    const flight = this.flightRepository.create(createFlightDto);
+
+    // Save the new Flight entity in the database
     return this.flightRepository.save(flight);
   }
 
-  async updateFlight(id: number, flight: Partial<Flight>): Promise<Flight> {
-    await this.flightRepository.update(id, flight);
-    return this.getFlightById(id);
+  // Update flight details
+  async updateFlight(
+    id: number,
+    updateFlightDto: UpdateFlightDto,
+  ): Promise<Flight> {
+    const flight = await this.flightRepository.preload({
+      id,
+      ...updateFlightDto,
+    });
+
+    if (!flight) {
+      throw new NotFoundException(`Flight with ID ${id} not found`);
+    }
+
+    return this.flightRepository.save(flight);
   }
 
+  // Delete a flight
   async deleteFlight(id: number): Promise<void> {
     const result = await this.flightRepository.delete(id);
     if (result.affected === 0) {

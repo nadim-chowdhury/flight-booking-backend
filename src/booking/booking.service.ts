@@ -20,15 +20,23 @@ export class BookingService {
   async createBooking(createBookingDto: CreateBookingDto): Promise<Booking> {
     const { flightId, passengerId, numberOfSeats } = createBookingDto;
 
-    const flight = await this.flightRepository.findOne(flightId);
-    const passenger = await this.passengerRepository.findOne(passengerId);
-
+    // Fetch the flight with the given ID using where clause
+    const flight = await this.flightRepository.findOne({
+      where: { id: flightId },
+    });
     if (!flight) {
       throw new NotFoundException(`Flight with ID ${flightId} not found`);
     }
+
+    // Fetch the passenger with the given ID using where clause
+    const passenger = await this.passengerRepository.findOne({
+      where: { id: passengerId },
+    });
     if (!passenger) {
       throw new NotFoundException(`Passenger with ID ${passengerId} not found`);
     }
+
+    // Check if there are enough available seats
     if (flight.availableSeats < numberOfSeats) {
       throw new NotFoundException('Not enough seats available');
     }
@@ -37,6 +45,7 @@ export class BookingService {
     flight.availableSeats -= numberOfSeats;
     await this.flightRepository.save(flight);
 
+    // Create a new booking entity
     const booking = this.bookingRepository.create({
       flight,
       passenger,
@@ -45,12 +54,14 @@ export class BookingService {
       bookingDate: new Date(),
     });
 
+    // Save the booking in the database
     return this.bookingRepository.save(booking);
   }
 
   async getBooking(id: number): Promise<Booking> {
-    const booking = await this.bookingRepository.findOne(id, {
-      relations: ['flight', 'passenger'],
+    // Use where clause for findOne
+    const booking = await this.bookingRepository.findOne({
+      where: { id },
     });
     if (!booking) {
       throw new NotFoundException(`Booking with ID ${id} not found`);

@@ -20,12 +20,18 @@ export class RatingService {
   async addRating(createRatingDto: CreateRatingDto): Promise<Rating> {
     const { userId, flightId, score } = createRatingDto;
 
-    const user = await this.userRepository.findOne(userId);
+    // Fetch the user with the given ID
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    const flight = await this.flightRepository.findOne(flightId);
+    // Fetch the flight with the given ID
+    const flight = await this.flightRepository.findOne({
+      where: { id: flightId },
+    });
     if (!flight) {
       throw new NotFoundException(`Flight with ID ${flightId} not found`);
     }

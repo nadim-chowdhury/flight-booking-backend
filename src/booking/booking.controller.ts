@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { Booking } from 'src/entities/booking.entity';
+import { Booking } from '../entities/booking.entity'; // Update path if needed
 
 @Controller('bookings')
 export class BookingController {

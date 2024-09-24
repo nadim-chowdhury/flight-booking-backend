@@ -21,7 +21,10 @@ export class User {
   @Column({ nullable: true })
   profilePicture: string;
 
-  // One-to-Many relationship with Booking (a user can make many bookings)
+  @Column({ default: 'user' })
+  role: string;
+
+  // One-to-Many relationship with Booking (a user can have many bookings)
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
 }

@@ -10,13 +10,13 @@ import { Payment } from '../entities/payment.entity';
 export class AdminService {
   constructor(
     @InjectRepository(Booking)
-    private bookingRepository: Repository<Booking>,
+    private readonly bookingRepository: Repository<Booking>,
     @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Flight)
-    private flightRepository: Repository<Flight>,
+    private readonly flightRepository: Repository<Flight>,
     @InjectRepository(Payment)
-    private paymentRepository: Repository<Payment>,
+    private readonly paymentRepository: Repository<Payment>,
   ) {}
 
   async getOverview() {
@@ -32,7 +32,7 @@ export class AdminService {
       totalBookings,
       totalUsers,
       totalFlights,
-      totalRevenue: totalRevenue.sum || 0,
+      totalRevenue: totalRevenue?.sum || 0,
     };
   }
 }
