@@ -10,6 +10,11 @@ import { Flight } from './entities/flight.entity';
 import { Booking } from './entities/booking.entity';
 import { Payment } from './entities/payment.entity';
 import { Passenger } from './entities/passenger.entity'; // Import Passenger entity
+import { AirlinesModule } from './airlines/airlines.module';
+import { AirportsModule } from './airports/airports.module';
+import { CountriesModule } from './countries/countries.module';
+import { PlanesModule } from './planes/planes.module';
+import { RoutesModule } from './routes/routes.module';
 
 @Module({
   imports: [
@@ -42,7 +47,11 @@ import { Passenger } from './entities/passenger.entity'; // Import Passenger ent
       serveRoot: '/uploads',
     }),
 
-    // Other modules
+    AirlinesModule,
+    AirportsModule,
+    CountriesModule,
+    PlanesModule,
+    RoutesModule,
   ],
 })
 export class AppModule {}
