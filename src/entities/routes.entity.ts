@@ -23,7 +23,7 @@ export class Route {
 
   @Column({ length: 10 })
   @ApiProperty({ example: 'ATL', description: 'Source airport code (IATA)' })
-  source_airport: string;
+  source_airport_code: string;
 
   @Column('int', { nullable: true })
   @ApiProperty({ example: 347, description: 'Source airport ID' })
@@ -34,7 +34,7 @@ export class Route {
     example: 'DOH',
     description: 'Destination airport code (IATA)',
   })
-  destination_airport: string;
+  destination_airport_code: string;
 
   @Column('int', { nullable: true })
   @ApiProperty({ example: 348, description: 'Destination airport ID' })

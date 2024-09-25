@@ -15,7 +15,7 @@ export class Airline {
     example: 'Qatar Airways',
     description: 'The name of the airline',
   })
-  name: string;
+  airline_name: string;
 
   @Column({ length: 255, nullable: true })
   @ApiProperty({

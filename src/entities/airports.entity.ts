@@ -15,16 +15,16 @@ export class Airport {
     example: 'Hartsfield-Jackson Atlanta International Airport',
     description: 'The name of the airport',
   })
-  name: string;
+  airport_name: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   @ApiProperty({
     example: 'Atlanta',
     description: 'The city where the airport is located',
   })
   city: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   @ApiProperty({
     example: 'United States',
     description: 'The country where the airport is located',
@@ -39,11 +39,11 @@ export class Airport {
   @ApiProperty({ example: 'KATL', description: 'ICAO code of the airport' })
   icao: string;
 
-  @Column('decimal')
+  @Column('decimal', { nullable: true })
   @ApiProperty({ example: 33.6367, description: 'Latitude of the airport' })
   latitude: number;
 
-  @Column('decimal')
+  @Column('decimal', { nullable: true })
   @ApiProperty({ example: -84.4281, description: 'Longitude of the airport' })
   longitude: number;
 
@@ -72,7 +72,7 @@ export class Airport {
 
   @Column({ length: 50 })
   @ApiProperty({ example: 'airport', description: 'Type of the location' })
-  type: string;
+  airport_type: string;
 
   @Column({ length: 50 })
   @ApiProperty({
