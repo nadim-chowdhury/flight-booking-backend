@@ -10,32 +10,32 @@ export class Airport {
   })
   id: number;
 
-  @Column({ length: 255 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'Hartsfield-Jackson Atlanta International Airport',
     description: 'The name of the airport',
   })
-  airport_name: string;
+  name: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'Atlanta',
     description: 'The city where the airport is located',
   })
   city: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'United States',
     description: 'The country where the airport is located',
   })
   country: string;
 
-  @Column({ length: 3, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'ATL', description: 'IATA code of the airport' })
   iata: string;
 
-  @Column({ length: 4, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'KATL', description: 'ICAO code of the airport' })
   icao: string;
 
@@ -66,15 +66,15 @@ export class Airport {
   })
   dst: string;
 
-  @Column({ length: 50, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'America/New_York', description: 'Timezone name' })
   tz: string;
 
-  @Column({ length: 50 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'airport', description: 'Type of the location' })
-  airport_type: string;
+  type: string;
 
-  @Column({ length: 50 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'OurAirports',
     description: 'Source of the information',

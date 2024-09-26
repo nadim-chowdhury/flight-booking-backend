@@ -10,14 +10,14 @@ export class Airline {
   })
   id: number;
 
-  @Column({ length: 255 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'Qatar Airways',
     description: 'The name of the airline',
   })
-  airline_name: string;
+  name: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'QA',
     description: 'The alias of the airline',
@@ -25,7 +25,7 @@ export class Airline {
   })
   alias: string;
 
-  @Column({ length: 10, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'QR',
     description: 'IATA code of the airline',
@@ -33,7 +33,7 @@ export class Airline {
   })
   iata: string;
 
-  @Column({ length: 10, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'QTR',
     description: 'ICAO code of the airline',
@@ -41,7 +41,7 @@ export class Airline {
   })
   icao: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'Qatar',
     description: 'The callsign of the airline',
@@ -49,7 +49,7 @@ export class Airline {
   })
   callsign: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'Qatar',
     description: 'The country of origin for the airline',

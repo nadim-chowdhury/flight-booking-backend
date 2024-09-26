@@ -10,15 +10,15 @@ export class Plane {
   })
   id: number;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'Boeing 747', description: 'The name of the plane' })
   name: string;
 
-  @Column({ length: 10, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'B747', description: 'The code of the plane' })
   code: string;
 
-  @Column({ length: 10, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'B747-8',
     description: 'The additional code of the plane',

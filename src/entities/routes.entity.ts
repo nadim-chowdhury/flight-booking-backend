@@ -10,7 +10,7 @@ export class Route {
   })
   id: number;
 
-  @Column({ length: 10 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'QR', description: 'Airline code (IATA or ICAO)' })
   airline_code: string;
 
@@ -21,26 +21,26 @@ export class Route {
   })
   airline_id: number;
 
-  @Column({ length: 10 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: 'ATL', description: 'Source airport code (IATA)' })
-  source_airport_code: string;
+  departure_airport: string;
 
   @Column('int', { nullable: true })
   @ApiProperty({ example: 347, description: 'Source airport ID' })
-  source_airport_id: number;
+  departure_airport_id: number;
 
-  @Column({ length: 10 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'DOH',
     description: 'Destination airport code (IATA)',
   })
-  destination_airport_code: string;
+  arrival_airport: string;
 
   @Column('int', { nullable: true })
   @ApiProperty({ example: 348, description: 'Destination airport ID' })
-  destination_airport_id: number;
+  arrival_airport_id: number;
 
-  @Column({ length: 10, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: 'Y',
     description: 'Codeshare status',
@@ -52,7 +52,11 @@ export class Route {
   @ApiProperty({ example: 0, description: 'Number of stops in the route' })
   stops: number;
 
-  @Column({ length: 10, nullable: true })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ example: '747', description: 'Equipment used for the route' })
   equipment: string;
+
+  @Column({ type: 'text', nullable: true }) // Added flight_number
+  @ApiProperty({ example: 'QR157', description: 'Flight number' })
+  flight_number: string; // Added flight_number property
 }
