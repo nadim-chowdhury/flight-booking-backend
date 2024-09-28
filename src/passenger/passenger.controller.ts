@@ -15,13 +15,18 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Passenger } from 'src/entities/passenger.entity';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
+@ApiTags('Passenger')
 @Controller('passenger')
 @UseGuards(JwtAuthGuard)
 export class PassengerController {
   constructor(private readonly passengerService: PassengerService) {}
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get passenger by ID' })
+  @ApiResponse({ status: 200, description: 'Passenger found successfully' })
+  @ApiResponse({ status: 404, description: 'Passenger not found' })
   getPassenger(@Param('id') id: string) {
     const passengerId = parseInt(id, 10);
     if (isNaN(passengerId)) {
@@ -31,6 +36,10 @@ export class PassengerController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update passenger details' })
+  @ApiBody({ type: Passenger })
+  @ApiResponse({ status: 200, description: 'Passenger updated successfully' })
+  @ApiResponse({ status: 404, description: 'Passenger not found' })
   updatePassenger(
     @Param('id') id: string,
     @Body() updateDto: Partial<Passenger>,
@@ -56,6 +65,13 @@ export class PassengerController {
       }),
     }),
   )
+  @ApiOperation({ summary: 'Upload passenger profile picture' })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile picture uploaded successfully',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid file or passenger ID' })
+  @ApiBody({ description: 'Profile picture file', type: 'multipart/form-data' })
   uploadProfilePicture(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,

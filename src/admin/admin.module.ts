@@ -8,9 +8,13 @@ import { Flight } from '../entities/flight.entity';
 import { Payment } from '../entities/payment.entity';
 import { FlightService } from '../flight/flight.service';
 import { UserService } from '../user/user.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Booking, User, Flight, Payment])],
+  imports: [
+    TypeOrmModule.forFeature([Booking, User, Flight, Payment]),
+    AuthModule,
+  ],
   controllers: [AdminController],
   providers: [AdminService, FlightService, UserService],
   exports: [AdminService],

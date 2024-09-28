@@ -5,6 +5,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Enable Global CORS
+  app.enableCors();
+
+  // Set Global Prefix
+  app.setGlobalPrefix('api');
+
+  // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('Flight Booking System API')
     .setDescription('API documentation for the Flight Booking System')
