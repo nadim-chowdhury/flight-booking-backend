@@ -11,24 +11,30 @@ export class AirlinesService {
   ) {}
 
   // Find all with sorting, filtering, and pagination
-  async findAll(query: any): Promise<Airline[]> {
+  async findAll(query: any): Promise<{ airlines: Airline[]; total: number }> {
     const { search, sort, order = 'ASC', limit = 10, offset = 0 } = query;
 
     const qb = this.airlinesRepository.createQueryBuilder('airline');
 
+    // Add search filter
     if (search) {
       qb.where('airline.name LIKE :search OR airline.country LIKE :search', {
         search: `%${search}%`,
       });
     }
 
+    // Add sorting
     if (sort) {
       qb.orderBy(`airline.${sort}`, order.toUpperCase() as any);
     }
 
+    // Add pagination
     qb.skip(offset).take(limit);
 
-    return qb.getMany();
+    // Get the result and total count
+    const [airlines, total] = await qb.getManyAndCount();
+
+    return { airlines, total };
   }
 
   findOne(id: number): Promise<Airline> {

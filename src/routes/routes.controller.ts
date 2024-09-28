@@ -28,8 +28,22 @@ export class RoutesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all routes with optional filters' })
-  @ApiResponse({ status: 200, description: 'Returns list of routes.' })
-  findAll(@Query() query: any): Promise<Route[]> {
+  @ApiResponse({
+    status: 200,
+    description: 'Returns list of routes and total count.',
+    schema: {
+      properties: {
+        routes: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Route' },
+        },
+        total: { type: 'number' },
+      },
+    },
+  })
+  async findAll(
+    @Query() query: any,
+  ): Promise<{ routes: Route[]; total: number }> {
     return this.routesService.findAll(query);
   }
 

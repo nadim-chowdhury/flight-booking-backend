@@ -10,8 +10,8 @@ export class AirportsService {
     private airportsRepository: Repository<Airport>,
   ) {}
 
-  // Find all with sorting, filtering, and pagination
-  async findAll(query: any): Promise<Airport[]> {
+  // Find all with sorting, filtering, and pagination, including total count
+  async findAll(query: any): Promise<{ airports: Airport[]; total: number }> {
     const { search, sort, order = 'ASC', limit = 10, offset = 0 } = query;
 
     const qb = this.airportsRepository.createQueryBuilder('airport');
@@ -31,7 +31,10 @@ export class AirportsService {
 
     qb.skip(offset).take(limit);
 
-    return qb.getMany();
+    // Get results and total count
+    const [airports, total] = await qb.getManyAndCount();
+
+    return { airports, total };
   }
 
   findOne(id: number): Promise<Airport> {

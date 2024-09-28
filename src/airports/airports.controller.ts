@@ -28,7 +28,7 @@ import { Roles } from '../auth/roles.decorator';
 export class AirportsController {
   constructor(private readonly airportsService: AirportsService) {}
 
-  // Public: Get all airports with optional filters
+  // Public: Get all airports with optional filters and total count
   @Get()
   @ApiOperation({ summary: 'Get all airports with optional filters' })
   @ApiQuery({
@@ -61,10 +61,20 @@ export class AirportsController {
   })
   @ApiResponse({
     status: 200,
-    description: 'List of airports returned successfully',
-    type: [Airport],
+    description: 'List of airports and total count returned successfully',
+    schema: {
+      properties: {
+        airports: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Airport' },
+        },
+        total: { type: 'number' },
+      },
+    },
   })
-  findAll(@Query() query: any): Promise<Airport[]> {
+  async findAll(
+    @Query() query: any,
+  ): Promise<{ airports: Airport[]; total: number }> {
     return this.airportsService.findAll(query);
   }
 

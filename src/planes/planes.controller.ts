@@ -28,8 +28,22 @@ export class PlanesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all planes with optional filters' })
-  @ApiResponse({ status: 200, description: 'Return list of planes.' })
-  findAll(@Query() query: any): Promise<Plane[]> {
+  @ApiResponse({
+    status: 200,
+    description: 'Return list of planes and total count.',
+    schema: {
+      properties: {
+        planes: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Plane' },
+        },
+        total: { type: 'number' },
+      },
+    },
+  })
+  async findAll(
+    @Query() query: any,
+  ): Promise<{ planes: Plane[]; total: number }> {
     return this.planesService.findAll(query);
   }
 

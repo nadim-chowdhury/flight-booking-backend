@@ -28,8 +28,22 @@ export class CountriesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all countries with optional filters' })
-  @ApiResponse({ status: 200, description: 'Returns list of countries.' })
-  findAll(@Query() query: any): Promise<Country[]> {
+  @ApiResponse({
+    status: 200,
+    description: 'Returns list of countries and total count.',
+    schema: {
+      properties: {
+        countries: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Country' },
+        },
+        total: { type: 'number' },
+      },
+    },
+  })
+  async findAll(
+    @Query() query: any,
+  ): Promise<{ countries: Country[]; total: number }> {
     return this.countriesService.findAll(query);
   }
 

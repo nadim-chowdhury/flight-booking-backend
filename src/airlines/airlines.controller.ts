@@ -23,7 +23,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 
-@ApiTags('Airlines') // Grouping routes under 'Airlines' in Swagger UI
+@ApiTags('Airlines')
 @Controller('airlines')
 export class AirlinesController {
   constructor(private readonly airlinesService: AirlinesService) {}
@@ -62,9 +62,19 @@ export class AirlinesController {
   @ApiResponse({
     status: 200,
     description: 'List of airlines returned successfully',
-    type: [Airline],
+    schema: {
+      properties: {
+        airlines: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Airline' },
+        },
+        total: { type: 'number' },
+      },
+    },
   })
-  findAll(@Query() query: any): Promise<Airline[]> {
+  async findAll(
+    @Query() query: any,
+  ): Promise<{ airlines: Airline[]; total: number }> {
     return this.airlinesService.findAll(query);
   }
 
@@ -80,9 +90,9 @@ export class AirlinesController {
 
   // Protected: Create a new airline (Admin only)
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards only on protected routes
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin') // Only 'admin' role can access this route
-  @ApiBearerAuth() // JWT Bearer token is required
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new airline (Admin only)' })
   @ApiResponse({
     status: 201,
@@ -96,9 +106,9 @@ export class AirlinesController {
 
   // Protected: Update an airline (Admin only)
   @Put(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin') // Only 'admin' role can access this route
-  @ApiBearerAuth() // JWT Bearer token is required
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an airline by ID (Admin only)' })
   @ApiParam({
     name: 'id',
@@ -107,15 +117,18 @@ export class AirlinesController {
   })
   @ApiResponse({ status: 204, description: 'Airline updated successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  update(@Param('id') id: number, @Body() airline: Airline): Promise<void> {
-    return this.airlinesService.update(id, airline);
+  async update(
+    @Param('id') id: number,
+    @Body() airline: Airline,
+  ): Promise<void> {
+    await this.airlinesService.update(id, airline);
   }
 
   // Protected: Delete an airline (Admin only)
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard) // Apply guards
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin') // Only 'admin' role can access this route
-  @ApiBearerAuth() // JWT Bearer token is required
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete an airline by ID (Admin only)' })
   @ApiParam({
     name: 'id',
@@ -124,7 +137,7 @@ export class AirlinesController {
   })
   @ApiResponse({ status: 204, description: 'Airline deleted successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  remove(@Param('id') id: number): Promise<void> {
-    return this.airlinesService.remove(id);
+  async remove(@Param('id') id: number): Promise<void> {
+    await this.airlinesService.remove(id);
   }
 }

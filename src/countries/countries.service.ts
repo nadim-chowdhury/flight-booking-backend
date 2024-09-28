@@ -10,8 +10,8 @@ export class CountriesService {
     private countriesRepository: Repository<Country>,
   ) {}
 
-  // Find all with sorting, filtering, and pagination
-  async findAll(query: any): Promise<Country[]> {
+  // Find all with sorting, filtering, and pagination, including total count
+  async findAll(query: any): Promise<{ countries: Country[]; total: number }> {
     const { search, sort, order = 'ASC', limit = 10, offset = 0 } = query;
 
     const qb = this.countriesRepository.createQueryBuilder('country');
@@ -28,7 +28,10 @@ export class CountriesService {
 
     qb.skip(offset).take(limit);
 
-    return qb.getMany();
+    // Get results and total count
+    const [countries, total] = await qb.getManyAndCount();
+
+    return { countries, total };
   }
 
   findOne(code: string): Promise<Country> {

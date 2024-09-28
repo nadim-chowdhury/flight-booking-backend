@@ -10,8 +10,8 @@ export class RoutesService {
     private routesRepository: Repository<Route>,
   ) {}
 
-  // Find all with sorting, filtering, and pagination
-  async findAll(query: any): Promise<Route[]> {
+  // Find all with sorting, filtering, and pagination, including total count
+  async findAll(query: any): Promise<{ routes: Route[]; total: number }> {
     const { search, sort, order = 'ASC', limit = 10, offset = 0 } = query;
 
     const qb = this.routesRepository.createQueryBuilder('route');
@@ -29,7 +29,10 @@ export class RoutesService {
 
     qb.skip(offset).take(limit);
 
-    return qb.getMany();
+    // Get the results and the total count
+    const [routes, total] = await qb.getManyAndCount();
+
+    return { routes, total };
   }
 
   findOne(id: number): Promise<Route> {
