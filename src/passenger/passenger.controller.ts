@@ -12,8 +12,8 @@ import {
 import { PassengerService } from './passenger.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+// import { diskStorage } from 'multer'; // Disk storage commented out
+// import { extname } from 'path'; // extname is no longer needed
 import { Passenger } from 'src/entities/passenger.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
@@ -51,11 +51,12 @@ export class PassengerController {
     return this.passengerService.updatePassenger(passengerId, updateDto);
   }
 
+  /*
   @Patch(':id/profile-picture')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads/profile-pictures',
+        destination: './uploads/profile-pictures', // Commented out the local upload path
         filename: (req, file, cb) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -85,10 +86,12 @@ export class PassengerController {
       throw new BadRequestException('File must be uploaded');
     }
 
+    // Commented out the logic related to handling the uploaded file locally
     const profilePicture = `/uploads/profile-pictures/${file.filename}`;
     return this.passengerService.updateProfilePicture(
       passengerId,
       profilePicture,
     );
   }
+  */
 }

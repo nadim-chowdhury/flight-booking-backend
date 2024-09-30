@@ -5,15 +5,15 @@ import {
   Body,
   Param,
   UseGuards,
-  UploadedFile,
-  UseInterceptors,
+  // UploadedFile, // Commented out since we're not handling file uploads anymore
+  // UseInterceptors, // Commented out since we're not using file upload interceptors
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+// import { FileInterceptor } from '@nestjs/platform-express'; // No longer needed
+// import { diskStorage } from 'multer'; // No longer needed
+// import { extname } from 'path'; // No longer needed
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -44,11 +44,12 @@ export class UserController {
     return this.userService.updateProfile(id, updateProfileDto);
   }
 
+  /*
   @Patch(':id/profile-picture')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads/profile-pictures',
+        destination: './uploads/profile-pictures', // Commented out to prevent writing to local disk
         filename: (req, file, cb) => {
           const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
           const ext = extname(file.originalname);
@@ -70,4 +71,5 @@ export class UserController {
     const profilePicturePath = `/uploads/profile-pictures/${file.filename}`;
     return this.userService.updateProfilePicture(id, profilePicturePath);
   }
+  */
 }
