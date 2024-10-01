@@ -12,21 +12,29 @@ export class RoutesService {
 
   // Find all with sorting, filtering, and pagination, including total count
   async findAll(query: any): Promise<{ routes: Route[]; total: number }> {
-    const { search, sort, order = 'ASC', limit = 10, offset = 0 } = query;
+    // Default sorting by 'id' if no sort field is provided
+    const {
+      search,
+      sort = 'id',
+      order = 'ASC',
+      limit = 10,
+      offset = 0,
+    } = query;
 
     const qb = this.routesRepository.createQueryBuilder('route');
 
+    // Add case-insensitive search filter if provided
     if (search) {
       qb.where(
-        'route.airline_code LIKE :search OR route.source_airport LIKE :search OR route.destination_airport LIKE :search',
+        'LOWER(route.airline_code) LIKE LOWER(:search) OR LOWER(route.source_airport) LIKE LOWER(:search) OR LOWER(route.destination_airport) LIKE LOWER(:search)',
         { search: `%${search}%` },
       );
     }
 
-    if (sort) {
-      qb.orderBy(`route.${sort}`, order.toUpperCase() as any);
-    }
+    // Add sorting by the provided column or default to 'id'
+    qb.orderBy(`route.${sort}`, order.toUpperCase() as any);
 
+    // Add pagination (limit and offset)
     qb.skip(offset).take(limit);
 
     // Get the results and the total count

@@ -16,12 +16,17 @@ export class CountriesService {
 
     const qb = this.countriesRepository.createQueryBuilder('country');
 
+    // Add case-insensitive search filter
     if (search) {
-      qb.where('country.name LIKE :search OR country.code LIKE :search', {
-        search: `%${search}%`,
-      });
+      qb.where(
+        'LOWER(country.name) LIKE LOWER(:search) OR LOWER(country.code) LIKE LOWER(:search)',
+        {
+          search: `%${search}%`,
+        },
+      );
     }
 
+    // Add sorting
     if (sort) {
       qb.orderBy(`country.${sort}`, order.toUpperCase() as any);
     }

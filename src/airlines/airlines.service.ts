@@ -10,22 +10,32 @@ export class AirlinesService {
     private airlinesRepository: Repository<Airline>,
   ) {}
 
-  // Find all with sorting, filtering, and pagination
+  // Find all with sorting, filtering, and pagination, including total count
   async findAll(query: any): Promise<{ airlines: Airline[]; total: number }> {
-    const { search, sort, order = 'ASC', limit = 10, offset = 0 } = query;
+    const {
+      search,
+      sort = 'name', // Default sort field
+      order = 'ASC', // Default sort order
+      limit = 10,
+      offset = 0,
+    } = query;
 
     const qb = this.airlinesRepository.createQueryBuilder('airline');
 
-    // Add search filter
+    // Add case-insensitive search filter
     if (search) {
-      qb.where('airline.name LIKE :search OR airline.country LIKE :search', {
-        search: `%${search}%`,
-      });
+      qb.where(
+        'LOWER(airline.name) LIKE LOWER(:search) OR LOWER(airline.country) LIKE LOWER(:search)',
+        {
+          search: `%${search}%`,
+        },
+      );
     }
 
-    // Add sorting
+    // Add sorting by the provided column or default to 'name'
     if (sort) {
-      qb.orderBy(`airline.${sort}`, order.toUpperCase() as any);
+      const sortOrder = order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'; // Ensure proper sorting order
+      qb.orderBy(`airline.${sort}`, sortOrder as any);
     }
 
     // Add pagination

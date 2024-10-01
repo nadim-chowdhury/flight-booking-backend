@@ -12,23 +12,30 @@ export class AirportsService {
 
   // Find all with sorting, filtering, and pagination, including total count
   async findAll(query: any): Promise<{ airports: Airport[]; total: number }> {
-    const { search, sort, order = 'ASC', limit = 10, offset = 0 } = query;
+    const {
+      search,
+      sort = 'id',
+      order = 'ASC',
+      limit = 10,
+      offset = 0,
+    } = query; // Default sort by 'id' if not provided
 
     const qb = this.airportsRepository.createQueryBuilder('airport');
 
+    // Add case-insensitive search filter if provided
     if (search) {
       qb.where(
-        'airport.name LIKE :search OR airport.city LIKE :search OR airport.country LIKE :search',
+        'LOWER(airport.name) LIKE LOWER(:search) OR LOWER(airport.city) LIKE LOWER(:search) OR LOWER(airport.country) LIKE LOWER(:search)',
         {
           search: `%${search}%`,
         },
       );
     }
 
-    if (sort) {
-      qb.orderBy(`airport.${sort}`, order.toUpperCase() as any);
-    }
+    // Add sorting by the provided column or default to 'id'
+    qb.orderBy(`airport.${sort}`, order.toUpperCase() as any);
 
+    // Add pagination (limit and offset)
     qb.skip(offset).take(limit);
 
     // Get results and total count

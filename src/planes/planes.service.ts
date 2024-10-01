@@ -16,16 +16,22 @@ export class PlanesService {
 
     const qb = this.planesRepository.createQueryBuilder('plane');
 
+    // Add case-insensitive search filter
     if (search) {
-      qb.where('plane.name LIKE :search OR plane.code LIKE :search', {
-        search: `%${search}%`,
-      });
+      qb.where(
+        'LOWER(plane.name) LIKE LOWER(:search) OR LOWER(plane.code) LIKE LOWER(:search)',
+        {
+          search: `%${search}%`,
+        },
+      );
     }
 
+    // Add sorting
     if (sort) {
       qb.orderBy(`plane.${sort}`, order.toUpperCase() as any);
     }
 
+    // Add pagination
     qb.skip(offset).take(limit);
 
     // Get the result and the total count
