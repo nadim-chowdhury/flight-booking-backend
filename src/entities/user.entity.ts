@@ -20,20 +20,12 @@ export class User {
   password: string;
 
   @ApiProperty({
-    example: 'John',
-    description: 'The first name of the user',
+    example: 'Nadim Chowdhury',
+    description: 'The full name of the user',
     required: false,
   })
   @Column({ nullable: true })
-  firstName: string;
-
-  @ApiProperty({
-    example: 'Doe',
-    description: 'The last name of the user',
-    required: false,
-  })
-  @Column({ nullable: true })
-  lastName: string;
+  fullName: string;
 
   @ApiProperty({
     example: 'https://example.com/profile.jpg',
