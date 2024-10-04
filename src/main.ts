@@ -10,11 +10,15 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
       'http://192.168.0.104:3000',
       'http://192.168.0.104:3001',
       'https://flight-booking-frontend-liart.vercel.app',
     ],
-    credentials: true, // Enable credentials if you're working with cookies
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true, // Allows credentials (e.g., cookies) to be sent
+    allowedHeaders: 'Content-Type, Accept, Authorization, X-Requested-With',
   });
 
   // Set Global Prefix
