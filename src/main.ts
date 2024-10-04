@@ -7,8 +7,14 @@ async function bootstrap() {
 
   // Enable Global CORS
   app.enableCors({
-    origin: true,
-    credentials: true, // Only if needed
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://192.168.0.104:3000',
+      'http://192.168.0.104:3001',
+      'https://flight-booking-frontend-liart.vercel.app',
+    ],
+    credentials: true, // Enable credentials if you're working with cookies
   });
 
   // Set Global Prefix
