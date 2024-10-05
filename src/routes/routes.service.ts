@@ -26,7 +26,7 @@ export class RoutesService {
     // Add case-insensitive search filter if provided
     if (search) {
       qb.where(
-        'LOWER(route.airline_code) LIKE LOWER(:search) OR LOWER(route.source_airport) LIKE LOWER(:search) OR LOWER(route.destination_airport) LIKE LOWER(:search)',
+        'LOWER(route.airline_code) LIKE LOWER(:search) OR LOWER(route.departure_airport) LIKE LOWER(:search) OR LOWER(route.arrival_airport) LIKE LOWER(:search) OR LOWER(route.flight_number) LIKE LOWER(:search)',
         { search: `%${search}%` },
       );
     }
