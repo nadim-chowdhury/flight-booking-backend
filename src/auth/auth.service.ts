@@ -15,19 +15,32 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async register(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ message: string; fullName: string; email: string }> {
     const { fullName, email, password } = authCredentialsDto;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create a new user entity with hashed password
     const user = this.userRepository.create({
       fullName,
       email,
       password: hashedPassword,
     });
+
+    // Save the user in the database
     await this.userRepository.save(user);
+
+    // Return a success message and the user's full name and email
+    return {
+      message: 'User successfully created',
+      fullName: user.fullName,
+      email: user.email,
+    };
   }
 
+  // Validate user by email and password for login
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.userRepository.findOne({ where: { email } });
     if (user && (await bcrypt.compare(password, user.password))) {
@@ -36,13 +49,24 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
-    const payload: JwtPayload = { email: user.email, sub: user.id };
+  // New method for validating user by email without checking password (for JWT token validation)
+  async validateUserByEmail(email: string): Promise<User | null> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (user) {
+      return user;
+    }
+    return null;
+  }
 
-    // Generate the access token
+  // Login method to authenticate a user and return a JWT token
+  async login(user: User) {
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.id,
+      roles: [user.role],
+    };
     const accessToken = this.jwtService.sign(payload);
 
-    // Return both user info and token
     return {
       access_token: accessToken,
       user: {

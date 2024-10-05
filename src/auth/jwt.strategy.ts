@@ -18,11 +18,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  // Validate the user based on the JWT payload (no password required)
   async validate(payload: JwtPayload) {
-    const user = await this.authService.validateUser(payload.email, null);
+    const user = await this.authService.validateUserByEmail(payload.email);
+
     if (!user) {
       throw new UnauthorizedException('Invalid token');
     }
+
     return user;
   }
 }

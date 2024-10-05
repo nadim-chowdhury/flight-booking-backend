@@ -4,6 +4,8 @@ import {
   Body,
   UseGuards,
   UnauthorizedException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,12 +22,16 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiOperation({ summary: 'Sign up a new user' })
+  @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User successfully created' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @Post('/register')
-  async signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    return this.authService.signUp(authCredentialsDto);
+  @HttpCode(HttpStatus.CREATED) // Return 201 Created status
+  async register(
+    @Body() authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ message: string; fullName: string; email: string }> {
+    // Return the message, fullName, and email from the service
+    return this.authService.register(authCredentialsDto);
   }
 
   @ApiOperation({ summary: 'Log in a user' })

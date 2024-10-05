@@ -15,7 +15,7 @@ export class AuthCredentialsDto {
 
   @ApiProperty({
     example: 'StrongPassword123!',
-    description: 'The password of the user',
+    description: 'The password of the user (min 8 characters)',
   })
   password: string;
 }
