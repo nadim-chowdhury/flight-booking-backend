@@ -19,11 +19,11 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 export class FlightController {
   constructor(private flightService: FlightService) {}
 
-  @Get()
+  @Post('search')
   @ApiOperation({ summary: 'Search for flights based on criteria' })
   @ApiResponse({ status: 200, description: 'Flights found successfully.' })
   @ApiResponse({ status: 404, description: 'Flights not found.' })
-  searchFlights(@Query() searchFlightDto: SearchFlightDto) {
+  searchFlights(@Body() searchFlightDto: SearchFlightDto) {
     return this.flightService.searchFlights(searchFlightDto);
   }
 
@@ -35,7 +35,7 @@ export class FlightController {
     return this.flightService.getFlightById(id);
   }
 
-  @Post()
+  @Post('create')
   @ApiOperation({ summary: 'Create a new flight' })
   @ApiBody({ type: CreateFlightDto })
   @ApiResponse({ status: 201, description: 'Flight created successfully.' })
