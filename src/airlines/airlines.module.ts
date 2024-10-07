@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AirlinesService } from './airlines.service';
 import { AirlinesController } from './airlines.controller';
-import { Airline } from 'src/entities/airlines.entity';
+import { Airline, AirlineSchema } from '../schemas/airline.schema';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Airline]), AuthModule],
+  imports: [
+    MongooseModule.forFeature([{ name: Airline.name, schema: AirlineSchema }]),
+    AuthModule,
+  ],
   providers: [AirlinesService],
   controllers: [AirlinesController],
 })

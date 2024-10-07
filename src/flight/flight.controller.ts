@@ -1,3 +1,74 @@
+// import {
+//   Controller,
+//   Get,
+//   Post,
+//   Put,
+//   Delete,
+//   Param,
+//   Body,
+//   Query,
+// } from '@nestjs/common';
+// import { FlightService } from './flight.service';
+// import { SearchFlightDto } from './dto/search-flight.dto';
+// import { CreateFlightDto } from './dto/create-flight.dto';
+// import { UpdateFlightDto } from './dto/update-flight.dto';
+// import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+
+// @ApiTags('Flight')
+// @Controller('flights')
+// export class FlightController {
+//   constructor(private flightService: FlightService) {}
+
+//   @Post('search')
+//   @ApiOperation({ summary: 'Search for flights based on criteria' })
+//   @ApiResponse({ status: 200, description: 'Flights found successfully.' })
+//   @ApiResponse({ status: 404, description: 'Flights not found.' })
+//   searchFlights(@Body() searchFlightDto: SearchFlightDto) {
+//     return this.flightService.searchFlights(searchFlightDto);
+//   }
+
+//   @Get(':id')
+//   @ApiOperation({ summary: 'Get flight by ID' })
+//   @ApiResponse({ status: 200, description: 'Flight retrieved successfully.' })
+//   @ApiResponse({ status: 404, description: 'Flight not found.' })
+//   getFlightById(@Param('id') id: number) {
+//     return this.flightService.getFlightById(id);
+//   }
+
+//   @Post('create')
+//   @ApiOperation({ summary: 'Create a new flight' })
+//   @ApiBody({ type: CreateFlightDto })
+//   @ApiResponse({ status: 201, description: 'Flight created successfully.' })
+//   @ApiResponse({
+//     status: 400,
+//     description: 'Invalid data for flight creation.',
+//   })
+//   createFlight(@Body() createFlightDto: CreateFlightDto) {
+//     return this.flightService.createFlight(createFlightDto);
+//   }
+
+//   @Put(':id')
+//   @ApiOperation({ summary: 'Update a flight' })
+//   @ApiBody({ type: UpdateFlightDto })
+//   @ApiResponse({ status: 200, description: 'Flight updated successfully.' })
+//   @ApiResponse({ status: 404, description: 'Flight not found.' })
+//   @ApiResponse({ status: 400, description: 'Invalid data for flight update.' })
+//   updateFlight(
+//     @Param('id') id: number,
+//     @Body() updateFlightDto: UpdateFlightDto,
+//   ) {
+//     return this.flightService.updateFlight(id, updateFlightDto);
+//   }
+
+//   @Delete(':id')
+//   @ApiOperation({ summary: 'Delete a flight' })
+//   @ApiResponse({ status: 200, description: 'Flight deleted successfully.' })
+//   @ApiResponse({ status: 404, description: 'Flight not found.' })
+//   deleteFlight(@Param('id') id: number) {
+//     return this.flightService.deleteFlight(id);
+//   }
+// }
+
 import {
   Controller,
   Get,
@@ -31,7 +102,7 @@ export class FlightController {
   @ApiOperation({ summary: 'Get flight by ID' })
   @ApiResponse({ status: 200, description: 'Flight retrieved successfully.' })
   @ApiResponse({ status: 404, description: 'Flight not found.' })
-  getFlightById(@Param('id') id: number) {
+  getFlightById(@Param('id') id: string) {
     return this.flightService.getFlightById(id);
   }
 
@@ -54,7 +125,7 @@ export class FlightController {
   @ApiResponse({ status: 404, description: 'Flight not found.' })
   @ApiResponse({ status: 400, description: 'Invalid data for flight update.' })
   updateFlight(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateFlightDto: UpdateFlightDto,
   ) {
     return this.flightService.updateFlight(id, updateFlightDto);
@@ -64,7 +135,7 @@ export class FlightController {
   @ApiOperation({ summary: 'Delete a flight' })
   @ApiResponse({ status: 200, description: 'Flight deleted successfully.' })
   @ApiResponse({ status: 404, description: 'Flight not found.' })
-  deleteFlight(@Param('id') id: number) {
+  deleteFlight(@Param('id') id: string) {
     return this.flightService.deleteFlight(id);
   }
 }
