@@ -121,6 +121,7 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRoot(process.env.DATABASE_URL, {
       // useNewUrlParser: true,
       // useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 360000,
     }),
     // ServeStaticModule.forRoot({
     //   rootPath: join(__dirname, '..', 'uploads'),
