@@ -13,7 +13,7 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   getHealthCheck(): { message: string; timestamp: Date } {
     return {
-      message: 'Flight Booking System is up and running!',
+      message: 'Hola! Flight Booking System is up and running!',
       timestamp: new Date(),
     };
   }
