@@ -23,7 +23,7 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('health-check')
+  @Get('/')
   @ApiOperation({ summary: 'Health check to verify service is running' })
   @ApiResponse({
     status: 200,
