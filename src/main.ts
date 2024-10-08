@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable Global CORS
+  // Enable Global CORS with all methods and headers for troubleshooting purposes
   app.enableCors({
     origin: [
       'http://localhost:3000',
@@ -14,9 +14,9 @@ async function bootstrap() {
       'http://127.0.0.1:3001',
       'https://flight-booking-frontend-liart.vercel.app',
     ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS, *', // or you can try '*'
     credentials: true, // Allows credentials (e.g., cookies) to be sent
-    allowedHeaders: 'Content-Type, Accept, Authorization, X-Requested-With',
+    allowedHeaders: 'Content-Type, Accept, Authorization, X-Requested-With, *', // Allows all headers for now
   });
 
   // Set Global Prefix
@@ -33,6 +33,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  // Listening on port 8000
   await app.listen(8000);
 }
 bootstrap();
