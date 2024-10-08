@@ -2,9 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // Correct import for Express
-import * as express from 'express';
+// import * as express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 
+const express = require('express');
 const server = express(); // Initialize Express
 
 async function bootstrap() {
