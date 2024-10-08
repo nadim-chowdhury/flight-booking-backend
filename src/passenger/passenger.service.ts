@@ -1,44 +1,13 @@
-// import { Injectable, NotFoundException } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Passenger } from 'src/entities/passenger.entity';
-// import { Repository } from 'typeorm';
-
-// @Injectable()
-// export class PassengerService {
-//   constructor(
-//     @InjectRepository(Passenger)
-//     private readonly passengerRepository: Repository<Passenger>,
-//   ) {}
-
-//   async getPassenger(id: number): Promise<Passenger> {
-//     const passenger = await this.passengerRepository.findOne({ where: { id } });
-//     if (!passenger) {
-//       throw new NotFoundException(`Passenger with ID ${id} not found`);
-//     }
-//     return passenger;
-//   }
-
-//   async updatePassenger(
-//     id: number,
-//     updateDto: Partial<Passenger>,
-//   ): Promise<Passenger> {
-//     await this.passengerRepository.update(id, updateDto);
-//     return this.getPassenger(id);
-//   }
-
-//   async updateProfilePicture(
-//     id: number,
-//     profilePicture: string,
-//   ): Promise<Passenger> {
-//     await this.passengerRepository.update(id, { profilePicture });
-//     return this.getPassenger(id);
-//   }
-// }
-
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Passenger } from '../schemas/passenger.schema';
+import { CreatePassengerDto } from './dto/create-passenger.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class PassengerService {
@@ -47,12 +16,40 @@ export class PassengerService {
     private readonly passengerModel: Model<Passenger>,
   ) {}
 
+  async createPassenger(
+    createPassengerDto: CreatePassengerDto,
+  ): Promise<Passenger> {
+    const { passportNumber } = createPassengerDto;
+
+    // Check if the passport number already exists
+    const existingPassenger = await this.passengerModel
+      .findOne({ passportNumber })
+      .exec();
+    if (existingPassenger) {
+      throw new ConflictException(
+        'Passenger with this passport number already exists',
+      );
+    }
+
+    // Create a new passenger with a unique passenger ID
+    const passenger = new this.passengerModel({
+      ...createPassengerDto,
+      passengerId: uuidv4(),
+    });
+
+    return passenger.save();
+  }
+
   async getPassenger(id: string): Promise<Passenger> {
     const passenger = await this.passengerModel.findById(id).exec();
     if (!passenger) {
       throw new NotFoundException(`Passenger with ID ${id} not found`);
     }
     return passenger;
+  }
+
+  async getAllPassengers(): Promise<Passenger[]> {
+    return this.passengerModel.find().exec();
   }
 
   async updatePassenger(
@@ -70,16 +67,13 @@ export class PassengerService {
     return updatedPassenger;
   }
 
-  async updateProfilePicture(
-    id: string,
-    profilePicture: string,
-  ): Promise<Passenger> {
-    const updatedPassenger = await this.passengerModel
-      .findByIdAndUpdate(id, { profilePicture }, { new: true })
+  async deletePassenger(id: string): Promise<Passenger> {
+    const deletedPassenger = await this.passengerModel
+      .findByIdAndDelete(id)
       .exec();
-    if (!updatedPassenger) {
+    if (!deletedPassenger) {
       throw new NotFoundException(`Passenger with ID ${id} not found`);
     }
-    return updatedPassenger;
+    return deletedPassenger;
   }
 }

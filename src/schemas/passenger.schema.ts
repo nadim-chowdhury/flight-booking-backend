@@ -1,9 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-import { Booking } from './booking.schema';
+import { Document } from 'mongoose';
 
 @Schema()
 export class Passenger extends Document {
+  @Prop({ required: true })
+  title: string;
+
   @Prop({ required: true })
   firstName: string;
 
@@ -11,11 +13,16 @@ export class Passenger extends Document {
   lastName: string;
 
   @Prop({ required: true })
+  dateOfBirth: Date;
+
+  @Prop({ required: true })
   passportNumber: string;
 
-  // One-to-Many relationship with Booking (a passenger can have many bookings)
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Booking' }] })
-  bookings: Booking[];
+  @Prop({ required: true })
+  passportExpiry: Date;
+
+  @Prop({ unique: true })
+  passengerId: string; // Unique ID for identifying the passenger
 }
 
 export const PassengerSchema = SchemaFactory.createForClass(Passenger);

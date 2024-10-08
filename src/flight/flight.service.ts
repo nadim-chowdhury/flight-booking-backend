@@ -577,21 +577,30 @@ export class FlightService {
     const { departureCity, destinationCity, departureDate, seatType } =
       searchFlightDto;
 
-    const flights = await this.flightModel
+    // Filter based on provided criteria, and ensure that flightCombination length is 1 (one-way)
+    const oneWayFlights = await this.flightModel
       .find({
-        from: departureCity,
-        to: destinationCity,
-        departureTime: { $gte: new Date(departureDate) },
-        cabinClass: seatType,
+        // 'flightCombination.flightDetails.flightInformation.location.0.city':
+        //   departureCity,
+        // 'flightCombination.flightDetails.flightInformation.location.1.city':
+        //   destinationCity,
+        // 'flightCombination.flightDetails.flightInformation.productDateTime.dateOfDeparture':
+        //   departureDate,
+        // 'flightCombination.flightDetails.flightInformation.addProductDetail.cabinClass':
+        //   seatType,
+        $expr: { $eq: [{ $size: '$flightCombination' }, 1] }, // Flight combination length is 1
       })
       .exec();
 
-    if (flights.length === 0) {
-      throw new NotFoundException('No flights found for the given criteria');
+    // Check if no flights are found
+    if (oneWayFlights.length === 0) {
+      throw new NotFoundException(
+        'No one-way flights found for the given criteria',
+      );
     }
 
-    // Process the flights as needed
-    return this.formatFlightResponse(flights, searchFlightDto);
+    // Format the response: return total number of flights and the flight data
+    return oneWayFlights;
   }
 
   // Handle return-trip search
@@ -606,67 +615,64 @@ export class FlightService {
       seatType,
     } = searchFlightDto;
 
-    const outboundFlights = await this.flightModel
+    // Filter for return-trip flights where flightCombination length is 2
+    const returnTripFlights = await this.flightModel
       .find({
-        from: departureCity,
-        to: destinationCity,
-        departureTime: { $gte: new Date(departureDate) },
-        cabinClass: seatType,
+        // 'flightCombination.flightDetails.flightInformation.location.0.city':
+        //   departureCity,
+        // 'flightCombination.flightDetails.flightInformation.location.1.city':
+        //   destinationCity,
+        // 'flightCombination.flightDetails.flightInformation.productDateTime.dateOfDeparture':
+        //   departureDate,
+        // 'flightCombination.flightDetails.flightInformation.addProductDetail.cabinClass':
+        //   seatType,
+        $expr: { $eq: [{ $size: '$flightCombination' }, 2] }, // Flight combination length is 2 (for return-trip)
       })
       .exec();
 
-    const returnFlights = await this.flightModel
-      .find({
-        from: destinationCity,
-        to: departureCity,
-        departureTime: { $gte: new Date(returnDate) },
-        cabinClass: seatType,
-      })
-      .exec();
-
-    if (outboundFlights.length === 0 || returnFlights.length === 0) {
-      throw new NotFoundException('No flights found for the given criteria');
+    if (returnTripFlights.length === 0) {
+      throw new NotFoundException(
+        'No return-trip flights found for the given criteria',
+      );
     }
 
-    // Process and return both outbound and return flights
-    return this.formatFlightResponse(
-      [...outboundFlights, ...returnFlights],
-      searchFlightDto,
-    );
+    // Return total count and the flight data
+    return returnTripFlights;
   }
 
   // Handle multi-city search
   async searchMultiCityFlights(searchFlightDto: SearchFlightDto): Promise<any> {
     const { flights, seatType } = searchFlightDto;
-    const results = [];
 
-    for (const flightSegment of flights) {
-      const { departureCity, destinationCity, departureDate } = flightSegment;
-      const matchingFlights = await this.flightModel
-        .find({
-          from: departureCity,
-          to: destinationCity,
-          departureTime: { $gte: new Date(departureDate) },
-          cabinClass: seatType,
-        })
-        .exec();
+    // Filter for multi-city flights where flightCombination length is greater than 2
+    const multiCityFlights = await this.flightModel
+      .find({
+        // 'flightCombination.flightDetails.flightInformation.addProductDetail.cabinClass':
+        //   seatType,
+        $expr: { $gt: [{ $size: '$flightCombination' }, 2] }, // Flight combination length greater than 2 (for multi-city)
+      })
+      .exec();
 
-      if (matchingFlights.length === 0) {
-        throw new NotFoundException(
-          `No flights found for segment from ${departureCity} to ${destinationCity} on ${departureDate}`,
-        );
-      }
-
-      results.push(...matchingFlights);
+    if (multiCityFlights.length === 0) {
+      throw new NotFoundException(
+        'No multi-city flights found for the given criteria',
+      );
     }
 
-    return this.formatFlightResponse(results, searchFlightDto);
+    // Return total count and the flight data
+    return multiCityFlights;
   }
 
   // Utility function to format the response
-  formatFlightResponse(flights: Flight[], searchFlightDto: SearchFlightDto) {
-    // Implement response formatting logic here
-    return flights;
+  formatFlightResponse(flights: any, searchFlightDto: SearchFlightDto) {
+    return flights.map((flight) => {
+      const { flightDetails, fareSummary, baggage } = flight;
+      return {
+        flightDetails,
+        fareSummary,
+        baggage,
+      };
+    });
   }
 
   // Get flight by ID
