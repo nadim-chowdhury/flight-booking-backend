@@ -4,12 +4,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 
-const server = express();
+const server = express(); // Initialize Express
 
 async function bootstrap() {
-  // const app = await NestFactory.create(AppModule);
+  // Create Nest application with Express adapter
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
+  // Enable CORS
   app.enableCors({
     origin: [
       'http://localhost:3000',
@@ -23,8 +24,10 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept, Authorization, X-Requested-With',
   });
 
+  // Set global prefix for the API
   app.setGlobalPrefix('api');
 
+  // Swagger configuration for API documentation
   const config = new DocumentBuilder()
     .setTitle('Flight Booking System API')
     .setDescription('API documentation for the Flight Booking System')
@@ -35,9 +38,12 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  // Listen on port 8000 (for local development)
   await app.listen(8000);
 }
 
+// Bootstrap the application
 bootstrap();
 
+// Export the Express server for serverless environments (e.g., Vercel)
 export default server;
