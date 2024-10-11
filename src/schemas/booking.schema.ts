@@ -6,8 +6,8 @@ import { Passenger } from './passenger.schema';
 
 @Schema()
 export class Booking extends Document {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  user: User;
+  @Prop({ type: Types.ObjectId, ref: 'User', required: false })
+  user?: User;
 
   @Prop({ type: Types.ObjectId, ref: 'Flight', required: true })
   flight: Flight;
@@ -24,8 +24,8 @@ export class Booking extends Document {
   @Prop({ required: true, type: 'decimal128' })
   totalPrice: number;
 
-  @Prop({ required: true })
-  status: string;
+  @Prop({ required: false })
+  status?: string;
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);

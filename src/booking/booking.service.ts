@@ -113,20 +113,20 @@ export class BookingService {
     }
 
     // Check if there are enough available seats
-    if (flight.availableSeats < numberOfSeats) {
-      throw new NotFoundException('Not enough seats available');
-    }
+    // if (flight.availableSeats < numberOfSeats) {
+    //   throw new NotFoundException('Not enough seats available');
+    // }
 
-    const totalPrice = flight.price * numberOfSeats;
-    flight.availableSeats -= numberOfSeats;
-    await flight.save(); // Save the updated flight document
+    // const totalPrice = flight.price * numberOfSeats;
+    // flight.availableSeats -= numberOfSeats;
+    // await flight.save(); // Save the updated flight document
 
     // Create a new booking document
     const booking = new this.bookingModel({
       flight,
       passenger,
       numberOfSeats,
-      totalPrice,
+      totalPrice: Math.floor(Math.random() * 10000),
       bookingDate: new Date(),
     });
 

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Booking } from './booking.schema';
 
 @Schema()
@@ -13,67 +13,66 @@ export class Flight extends Document {
   @Prop({ required: true })
   to: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: Number }) // Explicitly specify the type
   availableSeats: number;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: Date }) // Specify the type as Date
   departureTime: Date;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: Date }) // Specify the type as Date
   arrivalTime: Date;
 
-  @Prop({ required: true, type: 'decimal' })
+  @Prop({ required: true, type: Number }) // Specify type as Number for price
   price: number;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: String }) // Ensure this is a string
   duration: string;
 
-  @Prop({ nullable: true })
-  flightNumber: string;
+  @Prop({ type: String }) // Optional field with string type
+  flightNumber?: string;
 
-  @Prop({ nullable: true })
-  equipmentType: string;
+  @Prop({ type: String }) // Optional field with string type
+  equipmentType?: string;
 
-  @Prop({ nullable: true })
-  electronicTicketing: string;
+  @Prop({ type: String }) // Optional field with string type
+  electronicTicketing?: string;
 
-  @Prop({ nullable: true })
-  cabinClass: string;
+  // Allow cabinClass to be an array of strings
+  @Prop({ type: [String], default: [] }) // Explicit array of strings type
+  cabinClass: string[];
 
-  @Prop({ nullable: true })
-  fareBasis: string;
+  @Prop({ type: String }) // Optional field with string type
+  fareBasis?: string;
 
-  @Prop({ nullable: true })
-  techstop: string;
+  @Prop({ type: String }) // Optional field with string type
+  techstop?: string;
 
-  // New fields for detailed departure information
+  // Detailed departure information
   @Prop({
     type: Object,
-    nullable: true,
     default: {},
   })
-  departure: {
+  departure?: {
     airportName: string;
     city: string;
     country: string;
     terminal?: string;
   };
 
-  // New fields for detailed arrival information
+  // Detailed arrival information
   @Prop({
     type: Object,
-    nullable: true,
     default: {},
   })
-  arrival: {
+  arrival?: {
     airportName: string;
     city: string;
     country: string;
     terminal?: string;
   };
 
-  // One-to-Many relationship with Booking (a flight can have many bookings)
-  @Prop({ type: [{ type: Object, ref: 'Booking' }] })
+  // One-to-Many relationship with Booking
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Booking' }] })
   bookings: Booking[];
 }
 

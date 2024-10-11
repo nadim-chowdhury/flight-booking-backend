@@ -8,7 +8,7 @@ import { Model } from 'mongoose';
 import { Passenger } from '../schemas/passenger.schema';
 import { CreatePassengerDto } from './dto/create-passenger.dto';
 import { v4 as uuidv4 } from 'uuid';
-
+import { Types } from 'mongoose';
 @Injectable()
 export class PassengerService {
   constructor(
@@ -18,7 +18,7 @@ export class PassengerService {
 
   async createPassenger(
     createPassengerDto: CreatePassengerDto,
-  ): Promise<Passenger> {
+  ): Promise<Partial<Passenger>> {
     const { passportNumber } = createPassengerDto;
 
     // Check if the passport number already exists
@@ -37,9 +37,22 @@ export class PassengerService {
       passengerId: uuidv4(),
     });
 
-    return passenger.save();
-  }
+    const savedPassenger = await passenger.save();
 
+    // Return only the relevant fields for the frontend, including _id
+    const { _id, firstName, lastName, passengerId, dateOfBirth, title } =
+      savedPassenger;
+
+    return {
+      _id: _id as Types.ObjectId, // Explicitly return the _id as an ObjectId
+      passengerId,
+      firstName,
+      lastName,
+      dateOfBirth,
+      title,
+    };
+  }
+  
   async getPassenger(id: string): Promise<Passenger> {
     const passenger = await this.passengerModel.findById(id).exec();
     if (!passenger) {
