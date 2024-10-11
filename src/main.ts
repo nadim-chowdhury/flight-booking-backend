@@ -1,16 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-// Correct import for Express
-// import * as express from 'express';
-import { ExpressAdapter } from '@nestjs/platform-express';
-
-const express = require('express');
-const server = express(); // Initialize Express
 
 async function bootstrap() {
-  // Create Nest application with Express adapter
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  // Create Nest application without Express adapter
+  const app = await NestFactory.create(AppModule);
 
   // Enable CORS
   app.enableCors({
@@ -40,13 +34,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  // Listen on port 8000 (for local development)
+  // Listen on a port (default to 8000 if not provided in environment variables)
   await app.listen(process.env.PORT || 8000);
-  await app.init();
 }
 
 // Bootstrap the application
 bootstrap();
-
-// Export the Express server for serverless environments (e.g., Vercel)
-export default server;
