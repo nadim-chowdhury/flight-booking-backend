@@ -149,43 +149,43 @@ export class AdminController {
     return this.adminService.getOverview();
   }
 
-  @Get('flights')
-  @ApiOperation({ summary: 'Get List of Flights' })
-  @ApiResponse({
-    status: 200,
-    description: 'List of flights retrieved successfully.',
-  })
-  async getFlights() {
-    return this.flightService.getFlights();
-  }
+  // @Get('flights')
+  // @ApiOperation({ summary: 'Get List of Flights' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'List of flights retrieved successfully.',
+  // })
+  // async getFlights() {
+  //   return this.flightService.getFlights();
+  // }
 
-  @Post('flights')
-  @ApiOperation({ summary: 'Create a New Flight' })
-  @ApiBody({ type: CreateFlightDto })
-  @ApiResponse({ status: 201, description: 'Flight created successfully.' })
-  async createFlight(@Body() createFlightDto: CreateFlightDto) {
-    return this.flightService.createFlight(createFlightDto);
-  }
+  // @Post('flights')
+  // @ApiOperation({ summary: 'Create a New Flight' })
+  // @ApiBody({ type: CreateFlightDto })
+  // @ApiResponse({ status: 201, description: 'Flight created successfully.' })
+  // async createFlight(@Body() createFlightDto: CreateFlightDto) {
+  //   return this.flightService.createFlight(createFlightDto);
+  // }
 
-  @Put('flights/:id')
-  @ApiOperation({ summary: 'Update Flight Information' })
-  @ApiBody({ type: UpdateFlightDto })
-  @ApiResponse({ status: 200, description: 'Flight updated successfully.' })
-  @ApiResponse({ status: 404, description: 'Flight not found.' })
-  async updateFlight(
-    @Param('id') id: string, // Use string since MongoDB IDs are strings
-    @Body() updateFlightDto: UpdateFlightDto,
-  ) {
-    return this.flightService.updateFlight(id, updateFlightDto);
-  }
+  // @Put('flights/:id')
+  // @ApiOperation({ summary: 'Update Flight Information' })
+  // @ApiBody({ type: UpdateFlightDto })
+  // @ApiResponse({ status: 200, description: 'Flight updated successfully.' })
+  // @ApiResponse({ status: 404, description: 'Flight not found.' })
+  // async updateFlight(
+  //   @Param('id') id: string, // Use string since MongoDB IDs are strings
+  //   @Body() updateFlightDto: UpdateFlightDto,
+  // ) {
+  //   return this.flightService.updateFlight(id, updateFlightDto);
+  // }
 
-  @Delete('flights/:id')
-  @ApiOperation({ summary: 'Delete a Flight' })
-  @ApiResponse({ status: 200, description: 'Flight deleted successfully.' })
-  @ApiResponse({ status: 404, description: 'Flight not found.' })
-  async deleteFlight(@Param('id') id: string) {
-    return this.flightService.deleteFlight(id);
-  }
+  // @Delete('flights/:id')
+  // @ApiOperation({ summary: 'Delete a Flight' })
+  // @ApiResponse({ status: 200, description: 'Flight deleted successfully.' })
+  // @ApiResponse({ status: 404, description: 'Flight not found.' })
+  // async deleteFlight(@Param('id') id: string) {
+  //   return this.flightService.deleteFlight(id);
+  // }
 
   @Get('users')
   @ApiOperation({ summary: 'Get List of Users' })
