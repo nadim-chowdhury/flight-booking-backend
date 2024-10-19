@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import axios from 'axios';
 import { Flight } from '../schemas/flight.schema';
 import { SearchFlightDto } from './dto/search-flight.dto';
+import { AmadeusService } from 'src/amadeus/amadeus.service';
 
 @Injectable()
 export class FlightService {
@@ -19,6 +20,7 @@ export class FlightService {
 
   constructor(
     @InjectModel(Flight.name) private readonly flightModel: Model<Flight>,
+    private readonly amadeusService: AmadeusService,
   ) {}
 
   // Get Amadeus Auth Token
@@ -291,54 +293,36 @@ export class FlightService {
       return this.airportCache.get(iataCode);
     }
 
-    try {
-      // Attempt to fetch airport/city details from Amadeus API
-      const response = await axios.get(
-        `${this.amadeusBaseUrl2}/reference-data/locations`,
-        {
-          headers: {
-            Authorization: `Bearer ${await this.getAmadeusAuthToken()}`,
-          },
-          params: {
-            subType: 'CITY,AIRPORT',
-            keyword: iataCode, // Use IATA code as a search keyword
-          },
-        },
-      );
-
-      if (
-        response.data &&
-        response.data.data &&
-        response.data.data.length > 0
-      ) {
-        // Cache the first result as it should be the most relevant
-        const airportDetails = response.data.data[0];
-        this.airportCache.set(iataCode, airportDetails);
-        return airportDetails;
-      } else {
-        // Fallback to dictionaries if Amadeus API does not return results
-        const fallback = dictionaries.locations[iataCode];
-        if (fallback) {
-          this.airportCache.set(iataCode, fallback);
-          return fallback;
-        }
-        throw new NotFoundException(
-          `Airport or City details not found for: ${iataCode}`,
-        );
-      }
-    } catch (error) {
-      // Handle errors and fall back to dictionaries if the API call fails
-      console.error('Error fetching airport details:', error.message);
-
-      const fallback = dictionaries.locations[iataCode];
+    // Define fallback function to retrieve data from dictionaries
+    const getFallback = (code: string) => {
+      const fallback = dictionaries.locations[code];
       if (fallback) {
-        this.airportCache.set(iataCode, fallback);
+        this.airportCache.set(code, fallback); // Cache the dictionary data
         return fallback;
       }
-
       throw new NotFoundException(
-        `Airport or City details not found for: ${iataCode}`,
+        `Airport or City details not found for: ${code}`,
       );
+    };
+
+    try {
+      // Fetch the airport/city details from Amadeus API only if not cached
+      const airportDetails =
+        await this.amadeusService.getAirportDetails(iataCode);
+
+      if (airportDetails && airportDetails.length > 0) {
+        // Cache the first result as it should be the most relevant
+        const details = airportDetails[0];
+        this.airportCache.set(iataCode, details); // Cache the response
+        return details;
+      } else {
+        // Fallback to dictionaries if Amadeus API does not return results
+        return getFallback(iataCode);
+      }
+    } catch (error) {
+      console.error('Error fetching airport details:', error.message);
+      // Fallback to dictionaries if the Amadeus API call fails
+      return getFallback(iataCode);
     }
   }
 

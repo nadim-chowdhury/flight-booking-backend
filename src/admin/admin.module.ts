@@ -1,26 +1,3 @@
-// import { Module } from '@nestjs/common';
-// import { TypeOrmModule } from '@nestjs/typeorm';
-// import { AdminController } from './admin.controller';
-// import { AdminService } from './admin.service';
-// import { Booking } from '../entities/booking.entity';
-// import { User } from '../entities/user.entity';
-// import { Flight } from '../entities/flight.entity';
-// import { Payment } from '../entities/payment.entity';
-// import { FlightService } from '../flight/flight.service';
-// import { UserService } from '../user/user.service';
-// import { AuthModule } from 'src/auth/auth.module';
-
-// @Module({
-//   imports: [
-//     TypeOrmModule.forFeature([Booking, User, Flight, Payment]),
-//     AuthModule,
-//   ],
-//   controllers: [AdminController],
-//   providers: [AdminService, FlightService, UserService],
-//   exports: [AdminService],
-// })
-// export class AdminModule {}
-
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AdminController } from './admin.controller';
@@ -32,6 +9,7 @@ import { Payment, PaymentSchema } from '../schemas/payment.schema';
 import { FlightService } from '../flight/flight.service';
 import { UserService } from '../user/user.service';
 import { AuthModule } from 'src/auth/auth.module';
+import { AmadeusModule } from 'src/amadeus/amadeus.module'; // Import AmadeusModule
 
 @Module({
   imports: [
@@ -42,6 +20,7 @@ import { AuthModule } from 'src/auth/auth.module';
       { name: Payment.name, schema: PaymentSchema },
     ]),
     AuthModule,
+    AmadeusModule, // Ensure AmadeusModule is imported here
   ],
   controllers: [AdminController],
   providers: [AdminService, FlightService, UserService],
