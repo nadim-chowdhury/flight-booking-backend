@@ -14,4 +14,14 @@ export class AmadeusController {
       return { error: error.message };
     }
   }
+
+  @Get('all-airports')
+  async searchAllAirports(@Query('keyword') keyword: string) {
+    try {
+      const data = await this.amadeusService.searchAllAirports(keyword);
+      return data;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
 }

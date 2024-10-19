@@ -47,7 +47,28 @@ export class AmadeusService {
   // Fetch airport data from Amadeus API based on a search keyword
   async searchAirports(keyword: string): Promise<any> {
     const accessToken = await this.getAccessToken();
-    const url = `${this.apiBaseUrl}/reference-data/locations?subType=AIRPORT&keyword=${keyword}&page%5Blimit%5D=10`;
+    const url = `${this.apiBaseUrl}/reference-data/locations?subType=CITY,AIRPORT&keyword=${keyword}&page%5Blimit%5D=10`;
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get(url, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }),
+      );
+
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        `Failed to fetch airport data: ${error.message}`,
+        error.response?.status || 500,
+      );
+    }
+  }
+
+  // Fetch airport data from Amadeus API based on a search keyword
+  async searchAllAirports(keyword: string): Promise<any> {
+    const accessToken = await this.getAccessToken();
+    const url = `${this.apiBaseUrl}/reference-data/locations?subType=CITY,AIRPORT&keyword=${keyword}`;
 
     try {
       const response = await firstValueFrom(
