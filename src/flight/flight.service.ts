@@ -223,6 +223,47 @@ export class FlightService {
         throw new NotFoundException('No flights found for the given criteria');
       }
 
+      // Format the flight offers based on the search type
+      // let formattedFlights;
+      // switch (type) {
+      //   case 'one-way':
+      //     formattedFlights = await Promise.all(
+      //       response.data.data.map((flightOffer) =>
+      //         this.formatOneWayResponse(
+      //           flightOffer,
+      //           response.data.dictionaries,
+      //         ),
+      //       ),
+      //     );
+      //     break;
+      //   case 'return-trip':
+      //     formattedFlights = await Promise.all(
+      //       response.data.data.map((flightOffer) =>
+      //         this.formatReturnTripResponse(
+      //           flightOffer,
+      //           response.data.dictionaries,
+      //         ),
+      //       ),
+      //     );
+      //     break;
+      //   case 'multi-city':
+      //     formattedFlights = await Promise.all(
+      //       response.data.data.map((flightOffer) =>
+      //         this.formatMultiCityResponse(
+      //           flightOffer,
+      //           response.data.dictionaries,
+      //         ),
+      //       ),
+      //     );
+      //     break;
+      //   default:
+      //     throw new NotFoundException('Invalid flight search type');
+      // }
+
+      // Save formatted flight offers to MongoDB
+      // const savedFlights = await this.flightModel.insertMany(formattedFlights);
+      // console.log('Flights saved to MongoDB:', savedFlights);
+
       // Format and return the flight offers based on search type
       switch (type) {
         case 'one-way':
