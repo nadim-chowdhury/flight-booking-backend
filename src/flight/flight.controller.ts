@@ -7,6 +7,8 @@ import {
   Param,
   Body,
   Headers,
+  Req,
+  NotFoundException,
 } from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { SearchFlightDto } from './dto/search-flight.dto';
@@ -50,15 +52,29 @@ export class FlightController {
   }
 
   @Get('all')
-  @ApiOperation({ summary: 'Get all flight bookings based on user role' })
-  @ApiResponse({
-    status: 200,
-    description: 'Flight bookings retrieved successfully.',
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  getAllFlights(@Headers('Authorization') token: string) {
-    const accessToken = token.split(' ')[1]; // Extract token from Bearer token
-    return this.flightService.getAllFlights(accessToken);
+  @ApiOperation({ summary: 'Get all flights for a user or all data for admin' })
+  @ApiResponse({ status: 200, description: 'Flights retrieved successfully.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  getAllFlights(@Req() request: Request) {
+    try {
+      // Extract authorization header
+      const authHeader = request.headers['authorization'];
+
+      if (!authHeader) {
+        throw new NotFoundException('Authorization header not found');
+      }
+
+      const token = authHeader.split(' ')[1]; // Assumes Bearer token format
+
+      if (!token) {
+        throw new NotFoundException('Token not found in authorization header');
+      }
+
+      return this.flightService.getAllFlights(token);
+    } catch (error) {
+      console.error('Error in getAllFlights:', error.message);
+      throw new NotFoundException('Failed to retrieve flights');
+    }
   }
 
   @Get(':id')

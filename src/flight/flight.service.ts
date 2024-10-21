@@ -96,8 +96,11 @@ export class FlightService {
   // Get all flights based on user role (Admin sees all, users see only their bookings)
   async getAllFlights(accessToken: string): Promise<BookFlight[]> {
     const decodedToken = this.jwtService.decode(accessToken) as any;
+    console.log('getAllFlights ~ decodedToken:', decodedToken);
     const userId = decodedToken?.sub;
-    const role = decodedToken?.role;
+    console.log('getAllFlights ~ userId:', userId);
+    const role = decodedToken?.roles[0];
+    console.log('getAllFlights ~ role:', role);
 
     if (!userId) {
       throw new ForbiddenException('Invalid access token.');
