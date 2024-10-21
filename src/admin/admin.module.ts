@@ -10,6 +10,10 @@ import { FlightService } from '../flight/flight.service';
 import { UserService } from '../user/user.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { AmadeusModule } from 'src/amadeus/amadeus.module'; // Import AmadeusModule
+import {
+  BookFlight,
+  FlightSchema as BookFlightSchema,
+} from '../schemas/book-flight.schema'; // BookFlight schema
 
 @Module({
   imports: [
@@ -18,6 +22,7 @@ import { AmadeusModule } from 'src/amadeus/amadeus.module'; // Import AmadeusMod
       { name: User.name, schema: UserSchema },
       { name: Flight.name, schema: FlightSchema },
       { name: Payment.name, schema: PaymentSchema },
+      { name: BookFlight.name, schema: BookFlightSchema },
     ]),
     AuthModule,
     AmadeusModule, // Ensure AmadeusModule is imported here

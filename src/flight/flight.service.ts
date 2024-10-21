@@ -1,10 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import axios from 'axios';
 import { Flight } from '../schemas/flight.schema';
 import { SearchFlightDto } from './dto/search-flight.dto';
 import { AmadeusService } from 'src/amadeus/amadeus.service';
+import { CreateFlightDto } from './dto/create-flight.dto';
+import { BookFlight } from 'src/schemas/book-flight.schema';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class FlightService {
@@ -20,8 +27,104 @@ export class FlightService {
 
   constructor(
     @InjectModel(Flight.name) private readonly flightModel: Model<Flight>,
+    @InjectModel(BookFlight.name)
+    private readonly flightBookModel: Model<BookFlight>, // Ensure this is properly injected
     private readonly amadeusService: AmadeusService,
+    private readonly jwtService: JwtService,
   ) {}
+
+  // Save flight data to MongoDB
+  async createFlight(
+    createFlightDto: CreateFlightDto,
+    userId: string,
+  ): Promise<BookFlight> {
+    const {
+      flightCombination,
+      fareSummary,
+      baggage,
+      validatingCarrier,
+      finalFare,
+      flightSummary,
+      totalJourneyTime,
+    } = createFlightDto;
+
+    const firstFlightDetail =
+      flightCombination[0]?.flightDetails?.[0]?.flightInformation || {};
+    const lastFlightDetail =
+      flightCombination[0]?.flightDetails?.slice(-1)[0]?.flightInformation ||
+      {};
+
+    const from = firstFlightDetail?.location[0]?.locationId || 'Unknown';
+    const to =
+      lastFlightDetail?.location?.slice(-1)[0]?.locationId || 'Unknown';
+    const airline =
+      validatingCarrier ||
+      firstFlightDetail?.companyId?.marketingCarrierCode ||
+      'Unknown';
+    const departureTime =
+      firstFlightDetail?.productDateTime?.timeOfDeparture || 'Unknown';
+    const arrivalTime =
+      lastFlightDetail?.productDateTime?.timeOfArrival || 'Unknown';
+    const duration = totalJourneyTime || 0;
+    const price = parseFloat(finalFare) || 0;
+    const availableSeats =
+      firstFlightDetail?.addProductDetail?.availableSeats || 'N/A';
+
+    // Creating the flight document with userId
+    const createdFlight = new this.flightBookModel({
+      flightCombination,
+      fareSummary,
+      baggage,
+      validatingCarrier,
+      finalFare,
+      flightSummary,
+      totalJourneyTime,
+      from,
+      to,
+      airline,
+      departureTime,
+      arrivalTime,
+      duration,
+      price,
+      availableSeats,
+      userId, // Save the userId to link the booking to the user
+    });
+
+    return await createdFlight.save();
+  }
+
+  // Get all flights based on user role (Admin sees all, users see only their bookings)
+  async getAllFlights(accessToken: string): Promise<BookFlight[]> {
+    const decodedToken = this.jwtService.decode(accessToken) as any;
+    const userId = decodedToken?.sub;
+    const role = decodedToken?.role;
+
+    if (!userId) {
+      throw new ForbiddenException('Invalid access token.');
+    }
+
+    // If the user is an admin, return all flight bookings
+    if (role === 'admin') {
+      return this.flightBookModel.find().exec();
+    }
+
+    // Otherwise, return only the bookings for the current user
+    return this.flightBookModel.find({ userId }).exec();
+  }
+
+  // Get flight data by ID
+  async getFlightById(id: string): Promise<BookFlight> {
+    // Use Mongoose `findById` to find the flight by ID and check if it exists
+    const flight = await this.flightBookModel.findById(id).exec();
+
+    // If no flight is found, throw a `NotFoundException` with the flight ID
+    if (!flight) {
+      throw new NotFoundException(`Flight with ID ${id} not found`);
+    }
+
+    // Return the flight if it is found
+    return flight;
+  }
 
   // Get Amadeus Auth Token
   async getAmadeusAuthToken(): Promise<string> {

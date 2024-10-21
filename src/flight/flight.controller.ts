@@ -6,12 +6,20 @@ import {
   Delete,
   Param,
   Body,
+  Headers,
 } from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { SearchFlightDto } from './dto/search-flight.dto';
-import { CreateFlightDto } from './dto/create-flight.dto';
+// import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
+import { CreateFlightDto } from './dto/create-flight.dto';
 
 @ApiTags('Flight')
 @Controller('flights')
@@ -24,6 +32,42 @@ export class FlightController {
   @ApiResponse({ status: 404, description: 'Flights not found.' })
   searchFlights(@Body() searchFlightDto: SearchFlightDto) {
     return this.flightService.searchFlights(searchFlightDto);
+  }
+
+  @Post('book')
+  @ApiOperation({ summary: 'Create a new flight and save it to MongoDB' })
+  @ApiResponse({ status: 201, description: 'Flight created successfully.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid data for flight creation.',
+  })
+  createFlight(
+    @Body() createFlightDto: CreateFlightDto,
+    @Headers('Authorization') token: string,
+  ) {
+    const accessToken = token.split(' ')[1]; // Extract token from Bearer token
+    return this.flightService.createFlight(createFlightDto, accessToken);
+  }
+
+  @Get('all')
+  @ApiOperation({ summary: 'Get all flight bookings based on user role' })
+  @ApiResponse({
+    status: 200,
+    description: 'Flight bookings retrieved successfully.',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  getAllFlights(@Headers('Authorization') token: string) {
+    const accessToken = token.split(' ')[1]; // Extract token from Bearer token
+    return this.flightService.getAllFlights(accessToken);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get flight by ID' })
+  @ApiResponse({ status: 200, description: 'Flight retrieved successfully.' })
+  @ApiResponse({ status: 404, description: 'Flight not found.' })
+  @ApiParam({ name: 'id', required: true, description: 'ID of the flight' })
+  getFlightById(@Param('id') id: string) {
+    return this.flightService.getFlightById(id);
   }
 
   // @Get(':id')
