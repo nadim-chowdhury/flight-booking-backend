@@ -90,7 +90,13 @@ export class FlightService {
       userId, // Save the userId to link the booking to the user
     });
 
-    return await createdFlight.save();
+    // return await createdFlight.save();
+
+    // Save the created flight document
+    const savedFlight = await createdFlight.save();
+
+    // Return the saved flight data including the _id
+    return savedFlight;
   }
 
   // Get all flights based on user role (Admin sees all, users see only their bookings)
@@ -106,13 +112,13 @@ export class FlightService {
       throw new ForbiddenException('Invalid access token.');
     }
 
-    // If the user is an admin, return all flight bookings
+    // If the user is an admin, return all flight bookings sorted by creation date (latest first)
     if (role === 'admin') {
-      return this.flightBookModel.find().exec();
+      return this.flightBookModel.find().sort({ createdAt: -1 }).exec();
     }
 
-    // Otherwise, return only the bookings for the current user
-    return this.flightBookModel.find({ userId }).exec();
+    // Otherwise, return only the bookings for the current user, sorted by creation date (latest first)
+    return this.flightBookModel.find({ userId }).sort({ createdAt: -1 }).exec();
   }
 
   // Get flight data by ID

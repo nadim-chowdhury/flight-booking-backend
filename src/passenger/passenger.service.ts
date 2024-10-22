@@ -52,7 +52,33 @@ export class PassengerService {
       title,
     };
   }
-  
+
+  async createMultiplePassengers(
+    passengers: CreatePassengerDto[],
+  ): Promise<Partial<Passenger>[]> {
+    console.log('passengers:', passengers);
+    const createdPassengers = [];
+
+    for (const createPassengerDto of passengers) {
+      try {
+        // Create each passenger using the existing createPassenger method
+        const passenger = await this.createPassenger(createPassengerDto);
+        createdPassengers.push(passenger);
+      } catch (error) {
+        if (error instanceof ConflictException) {
+          console.warn(
+            `Passenger with passport number ${createPassengerDto.passportNumber} already exists.`,
+          );
+          // You can choose to skip this passenger or handle it differently if needed
+        } else {
+          throw error; // Re-throw other errors
+        }
+      }
+    }
+
+    return createdPassengers;
+  }
+
   async getPassenger(id: string): Promise<Passenger> {
     const passenger = await this.passengerModel.findById(id).exec();
     if (!passenger) {
@@ -80,13 +106,12 @@ export class PassengerService {
     return updatedPassenger;
   }
 
-  async deletePassenger(id: string): Promise<Passenger> {
+  async deletePassenger(id: string): Promise<void> {
     const deletedPassenger = await this.passengerModel
       .findByIdAndDelete(id)
       .exec();
     if (!deletedPassenger) {
       throw new NotFoundException(`Passenger with ID ${id} not found`);
     }
-    return deletedPassenger;
   }
 }

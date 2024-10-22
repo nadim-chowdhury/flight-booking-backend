@@ -20,10 +20,9 @@ import {
   ApiBody,
   ApiParam,
 } from '@nestjs/swagger';
-
-@ApiTags('Passenger')
 @Controller('passenger')
 @UseGuards(JwtAuthGuard)
+@ApiTags('Passenger')
 export class PassengerController {
   constructor(private readonly passengerService: PassengerService) {}
 
@@ -49,6 +48,30 @@ export class PassengerController {
     return this.passengerService.createPassenger(createPassengerDto);
   }
 
+  @Post('/bulk')
+  @ApiOperation({
+    summary: 'Create multiple passengers',
+    description: 'Creates multiple passengers in a single request.',
+  })
+  @ApiBody({
+    type: [CreatePassengerDto],
+    description: 'Array of passenger DTOs to create',
+  })
+  @ApiResponse({ status: 201, description: 'Passengers created successfully' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid data or some passengers already exist',
+  })
+  async createMultiplePassengers(
+    @Body() createPassengersDto: CreatePassengerDto[],
+  ) {
+    if (!createPassengersDto || !Array.isArray(createPassengersDto)) {
+      throw new BadRequestException('Passenger data must be an array');
+    }
+
+    return this.passengerService.createMultiplePassengers(createPassengersDto);
+  }
+
   @Get(':id')
   @ApiOperation({
     summary: 'Get passenger by ID',
@@ -65,7 +88,7 @@ export class PassengerController {
     type: Passenger,
   })
   @ApiResponse({ status: 404, description: 'Passenger not found' })
-  getPassenger(@Param('id') id: string) {
+  async getPassenger(@Param('id') id: string) {
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
       throw new BadRequestException('Invalid passenger ID');
     }
@@ -103,7 +126,7 @@ export class PassengerController {
     type: Passenger,
   })
   @ApiResponse({ status: 404, description: 'Passenger not found' })
-  updatePassenger(
+  async updatePassenger(
     @Param('id') id: string,
     @Body() updateDto: Partial<Passenger>,
   ) {
@@ -125,7 +148,7 @@ export class PassengerController {
   })
   @ApiResponse({ status: 200, description: 'Passenger deleted successfully' })
   @ApiResponse({ status: 404, description: 'Passenger not found' })
-  deletePassenger(@Param('id') id: string) {
+  async deletePassenger(@Param('id') id: string) {
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
       throw new BadRequestException('Invalid passenger ID');
     }
