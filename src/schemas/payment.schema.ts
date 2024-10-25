@@ -1,30 +1,21 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-import { User } from './user.schema';
-import { Booking } from './booking.schema';
+import { Schema, Document, Types } from 'mongoose';
 
-@Schema()
-export class Payment extends Document {
-  @Prop({ required: true })
+export const PaymentSchema = new Schema({
+  stripePaymentId: { type: String, required: true },
+  amount: { type: Number, required: true },
+  currency: { type: String, required: true },
+  status: { type: String, required: true },
+  user: { type: Types.ObjectId, ref: 'User', required: true },
+  booking: { type: Types.ObjectId, ref: 'Booking', required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+export interface Payment extends Document {
   stripePaymentId: string;
-
-  @Prop({ required: true })
   amount: number;
-
-  @Prop({ required: true })
   currency: string;
-
-  @Prop({ required: true })
   status: string;
-
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  user: User;
-
-  @Prop({ type: Types.ObjectId, ref: 'Booking', required: true })
-  booking: Booking;
-
-  @Prop({ required: true, default: Date.now })
+  user: Types.ObjectId; // Reference type for User
+  booking: Types.ObjectId; // Reference type for Booking
   createdAt: Date;
 }
-
-export const PaymentSchema = SchemaFactory.createForClass(Payment);

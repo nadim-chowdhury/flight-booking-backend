@@ -18,14 +18,14 @@ import {
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: Booking.name, schema: BookingSchema },
-      { name: User.name, schema: UserSchema },
-      { name: Flight.name, schema: FlightSchema },
-      { name: Payment.name, schema: PaymentSchema },
-      { name: BookFlight.name, schema: BookFlightSchema },
+      { name: 'Booking', schema: BookingSchema },
+      { name: 'User', schema: UserSchema },
+      { name: 'Flight', schema: FlightSchema },
+      { name: 'Payment', schema: PaymentSchema }, // Use 'Payment' as the string name
+      { name: 'BookFlight', schema: BookFlightSchema }, // Use 'BookFlight' as the string name
     ]),
     AuthModule,
-    AmadeusModule, // Ensure AmadeusModule is imported here
+    AmadeusModule,
   ],
   controllers: [AdminController],
   providers: [AdminService, FlightService, UserService],

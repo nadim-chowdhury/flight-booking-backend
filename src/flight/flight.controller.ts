@@ -22,6 +22,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { CreateFlightDto } from './dto/create-flight.dto';
+import { BookFlight } from 'src/schemas/book-flight.schema';
 
 @ApiTags('Flight')
 @Controller('flights')
@@ -84,6 +85,14 @@ export class FlightController {
   @ApiParam({ name: 'id', required: true, description: 'ID of the flight' })
   getFlightById(@Param('id') id: string) {
     return this.flightService.getFlightById(id);
+  }
+
+  @Put('flight-pricing/:id')
+  async updateFlight(
+    @Param('id') id: string,
+    @Body() updateFlightDto: UpdateFlightDto,
+  ): Promise<BookFlight> {
+    return await this.flightService.updateFlightById(id, updateFlightDto);
   }
 
   // @Get(':id')

@@ -51,3 +51,38 @@ export class BookFlight extends Document {
 }
 
 export const FlightSchema = SchemaFactory.createForClass(BookFlight);
+
+// import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+// import { Document } from 'mongoose';
+
+// @Schema()
+// export class BookFlight extends Document {
+//   @Prop({ required: true })
+//   userId: string;
+
+//   @Prop({ required: true })
+//   flightCombination: any[];
+
+//   @Prop({ required: true })
+//   fareSummary: any;
+
+//   @Prop({ required: true })
+//   baggage: any;
+
+//   @Prop({ required: true })
+//   validatingCarrier: string;
+
+//   @Prop({ required: true })
+//   finalFare: number;
+
+//   @Prop({ required: true })
+//   flightSummary: any;
+
+//   @Prop({ required: true })
+//   totalJourneyTime: number;
+
+//   @Prop({ default: Date.now })
+//   createdAt: Date;
+// }
+
+// export const BookFlightSchema = SchemaFactory.createForClass(BookFlight);

@@ -58,6 +58,7 @@ export class PassengerService {
   ): Promise<Partial<Passenger>[]> {
     console.log('passengers:', passengers);
     const createdPassengers = [];
+    // console.log('createdPassengers:', createdPassengers);
 
     for (const createPassengerDto of passengers) {
       try {

@@ -51,7 +51,7 @@ export class AdminService {
     @InjectModel(Booking.name) private readonly bookingModel: Model<Booking>,
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @InjectModel(Flight.name) private readonly flightModel: Model<Flight>,
-    @InjectModel(Payment.name) private readonly paymentModel: Model<Payment>,
+    @InjectModel('Payment') private readonly paymentModel: Model<Payment>,
   ) {}
 
   async getOverview() {
