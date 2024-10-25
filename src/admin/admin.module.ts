@@ -14,6 +14,7 @@ import {
   BookFlight,
   FlightSchema as BookFlightSchema,
 } from '../schemas/book-flight.schema'; // BookFlight schema
+import { FlightPricingResponseSchema } from 'src/schemas/flight-pricing-response.schema';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import {
       { name: 'Flight', schema: FlightSchema },
       { name: 'Payment', schema: PaymentSchema }, // Use 'Payment' as the string name
       { name: 'BookFlight', schema: BookFlightSchema }, // Use 'BookFlight' as the string name
+      { name: 'FlightPricingResponse', schema: FlightPricingResponseSchema },
     ]),
     AuthModule,
     AmadeusModule,
