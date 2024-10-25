@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AmadeusService } from './amadeus.service'; // Import AmadeusService
 import { BookFlight } from 'src/schemas/book-flight.schema';
-import { FlightPricingResponse } from 'src/schemas/flight-pricing-response.schema';
+import { FlightPricingResponse } from '../schemas/flight-pricing-response.schema';
 // import { UpdateFlightDto } from './dto/UpdateFlight.dto';
 
 @Controller('amadeus')

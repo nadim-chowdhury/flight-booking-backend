@@ -10,7 +10,7 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { InjectModel } from '@nestjs/mongoose';
-import { FlightPricingResponse } from 'src/schemas/flight-pricing-response.schema';
+import { FlightPricingResponse } from '../schemas/flight-pricing-response.schema';
 import { Model } from 'mongoose';
 // import { UpdateFlightDto } from './dto/UpdateFlight.dto';
 import { BookFlight } from 'src/schemas/book-flight.schema';

@@ -9,7 +9,7 @@ import {
   FlightSchema as BookFlightSchema,
 } from '../schemas/book-flight.schema'; // Import BookFlight schema
 import { AmadeusModule } from 'src/amadeus/amadeus.module'; // Import AmadeusModule
-import { FlightPricingResponseSchema } from 'src/schemas/flight-pricing-response.schema';
+import { FlightPricingResponseSchema } from '../schemas/flight-pricing-response.schema';
 
 @Module({
   imports: [

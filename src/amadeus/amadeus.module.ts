@@ -12,7 +12,7 @@ import {
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: FlightPricingResponse.name, schema: FlightPricingResponseSchema },
+      { name: 'FlightPricingResponse', schema: FlightPricingResponseSchema },
     ]),
     ConfigModule,
     HttpModule,

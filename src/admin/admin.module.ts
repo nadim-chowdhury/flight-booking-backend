@@ -14,7 +14,7 @@ import {
   BookFlight,
   FlightSchema as BookFlightSchema,
 } from '../schemas/book-flight.schema'; // BookFlight schema
-import { FlightPricingResponseSchema } from 'src/schemas/flight-pricing-response.schema';
+import { FlightPricingResponseSchema } from '../schemas/flight-pricing-response.schema';
 
 @Module({
   imports: [
