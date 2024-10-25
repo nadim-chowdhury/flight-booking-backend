@@ -32,12 +32,14 @@ export class PaymentService {
   ): Promise<Payment> {
     // Fetch the user with the given ID
     const user = await this.userModel.findById(userId);
+    console.log('user:', user);
     if (!user) {
       throw new BadRequestException(`User with ID ${userId} not found`);
     }
 
     // Fetch the booking with the given ID
     const booking = await this.bookingModel.findById(bookingId);
+    console.log('booking:', booking);
     if (!booking) {
       throw new BadRequestException(`Booking with ID ${bookingId} not found`);
     }
