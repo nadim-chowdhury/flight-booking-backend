@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   BadRequestException,
+  Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { PassengerService } from './passenger.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -70,6 +72,31 @@ export class PassengerController {
     }
 
     return this.passengerService.createMultiplePassengers(createPassengersDto);
+  }
+
+  @Get('/search')
+  async searchPassengers(
+    @Query('name') name?: string,
+    @Query('passportNumber') passportNumber?: string,
+  ): Promise<Passenger[]> {
+    if (!name && !passportNumber) {
+      throw new BadRequestException(
+        'A search query (name or passport number) is required',
+      );
+    }
+
+    const result = await this.passengerService.searchPassengers({
+      name,
+      passportNumber,
+    });
+
+    if (result.length === 0) {
+      throw new NotFoundException(
+        'No passengers found with the given criteria.',
+      );
+    }
+
+    return result;
   }
 
   @Get(':id')
