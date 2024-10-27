@@ -73,9 +73,7 @@ export class BookingController {
   @ApiOperation({ summary: 'Create a new booking' })
   @ApiBody({ type: CreateBookingDto })
   @ApiResponse({ status: 201, description: 'Booking created successfully.' })
-  async createBooking(
-    @Body() createBookingDto: CreateBookingDto,
-  ): Promise<Booking> {
+  async createBooking(@Body() createBookingDto: any): Promise<Booking> {
     try {
       const booking = await this.bookingService.createBooking(createBookingDto);
       return booking;

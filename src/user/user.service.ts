@@ -102,10 +102,15 @@ export class UserService {
 
   // Get user profile by ID
   async getProfile(userId: string): Promise<User> {
-    const user = await this.userModel.findById(userId).exec();
+    const user = await this.userModel
+      .findById(userId)
+      .select('-password') // Exclude the password field
+      .exec();
+
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
+
     return user;
   }
 

@@ -221,7 +221,7 @@ class TicketingAgreement {
   option: string;
 }
 
-@Schema()
+@Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class Booking extends Document {
   @Prop({ required: true })
   type: string;
@@ -231,6 +231,12 @@ export class Booking extends Document {
 
   @Prop({ required: true })
   queuingOfficeId: string;
+
+  @Prop({ required: false })
+  paymentId: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId; // Added userId field with reference to User model
 
   @Prop({ type: [AssociatedRecord], required: true })
   associatedRecords: AssociatedRecord[];
